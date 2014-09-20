@@ -4,4 +4,4 @@ function isOnTrack(bool) {
 	} else {
 		document.getElementById('yearstatus').disabled = true;
 	}
-};
+}
