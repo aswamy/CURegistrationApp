@@ -8,15 +8,21 @@
 		trigger_error('Connection to database has failed');
 	}
 
-	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$_GET[degree]' ORDER BY p.course_year, p.course_semester";
+	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$_GET[degree]' ORDER BY p.course_year, p.course_semester";
 	$courses_query_rs = $conn->query($courses_query);
 	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 
 	$course_prereq_json = "{";
 
 	foreach($courses_array as $course) {
-		echo "<div class=courseElement id=$course[course_name] onmouseover=highlightPrerequisites(this) onmouseout=restoreCourseElements()>$course[course_name] in $course[course_semester] in year $course[course_year]</div>";
-		$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";
+		$course_name = $course['course_name'];
+
+		if ($course_name != 'S_ELECTIVE' && $course_name != 'E_ELECTIVE' && $course_name != 'C_ELECTIVE') {
+			echo "<div class=courseElement id=$course[course_name] onmouseover=highlightPrerequisites(this) onmouseout=restoreCourseElements()>$course[course_name] in $course[course_semester] in year $course[course_year]</div>";
+			$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";
+		} else {
+			echo "<div class=courseElement id=$course[course_name]>$course[course_name] in $course[course_semester] in year $course[course_year]</div>";
+		}
 	}
 
 	$course_prereq_json = rtrim($course_prereq_json, ',');
