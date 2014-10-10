@@ -1,3 +1,4 @@
+
 def parseTime(time):
 
     finalTime = ""
@@ -79,6 +80,8 @@ def parseDataFall():
 
     outputRunning += ";"
     fileout1.write(outputRunning)
+    filein.close()
+    fileout1.close()
 
 def parseDataWinter():
 
@@ -122,5 +125,10 @@ def parseDataWinter():
 
     outputRunning += ";"
     fileout1.write(outputRunning)
+    filein.close()
+    fileout1.close()
+
+parseDataFall()
+parseDataWinter()
 
 
