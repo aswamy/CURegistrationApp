@@ -37,7 +37,7 @@ def parseClassDays(days):
     #print output
     return output
 
-def parseData():
+def parseDataFall():
 
     filein = open("data.csv","r")
     fileout1 = open("runningCourses.sql", "w")
@@ -80,5 +80,47 @@ def parseData():
     outputRunning += ";"
     fileout1.write(outputRunning)
 
+def parseDataWinter():
 
-parseData()
+    filein = open("datawinter.csv","r")
+    fileout1 = open("runningCoursesWinter.sql", "w")
+
+    #running courses
+    outputRunning = "INSERT INTO `cu_running_courses` ( `course_name`, `course_section`, `class_type`, `course_semester`, `course_year`, `seats_left`, `class_days`, `class_start`, `class_end`, `class_weeks_run`) VALUES"
+
+    
+    lineNumber = 0;
+    for line in filein:
+
+        if lineNumber != 0:
+            lineSections = line.split(";")
+            courseName = (lineSections[0].strip('"') + lineSections[1].strip('"'))
+            if lineNumber > 1:
+                outputRunning += ","
+            outputRunning += "\n\t("
+            outputRunning += "'" + courseName + "',"
+            outputRunning += "'" + lineSections[2].strip('"') + "',"
+            classType = lineSections[4].strip('"')
+            outputRunning += "'" + classType + "',"
+            outputRunning += "'winter',"
+            outputRunning += "'2014',"
+            seatsLeft = lineSections[8].strip("\r\n")
+            if len(list(seatsLeft)) == 0:
+                outputRunning += "'-1',"
+            else:
+                
+                outputRunning += "'" + seatsLeft + "', "
+
+            outputRunning += "'" + parseClassDays(lineSections[5]) + "',"
+            outputRunning += "'" + parseTime(lineSections[6]) + "',"
+            outputRunning += "'" + parseTime(lineSections[7]) + "',"
+            outputRunning += "'weekly')"
+            
+            
+        lineNumber += 1
+        
+
+    outputRunning += ";"
+    fileout1.write(outputRunning)
+
+
