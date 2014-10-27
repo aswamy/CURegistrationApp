@@ -1,14 +1,27 @@
 <?php
-
+	//
+	//Resume the session that was initialized on the previous page
+	session_start();
+	//Access the session params 
+	$degree = $_SESSION['degree'];
+	$on_track = $_SESSION['on_track'];
+	$year_status = $_SESSION['year_status'];
+	//Print the session parameters for demonstration 
+	echo "This is the session data:"."</br>";
+	echo "degree:".$degree."</br>";
+	echo "ontrack:".$on_track."</br>";
+	echo "yearstatus:".$year_status."</br>";
+	
 	echo '<link rel="stylesheet" type="text/css" href="css/PrerequisiteTree.css" />';
-	echo "<form method='GET' action='splash.php'>";
+	//echo "<form method='GET' action='splash.php'>";
 
 	$conn = new mysqli('localhost', 'root', '', 'sysc4504');
 	if ($conn->connect_error) {
 		trigger_error('Connection to database has failed');
 	}
 
-	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$_GET[degree]' ORDER BY p.course_year, p.course_semester";
+	//$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$_GET[degree]' ORDER BY p.course_year, p.course_semester";
+	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' ORDER BY p.course_year, p.course_semester";
 	$courses_query_rs = $conn->query($courses_query);
 	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 
@@ -42,10 +55,8 @@
 	echo '<p id="displayPreq"></p>';
 	
 	
-	echo '<input type="submit" value="Done"/></form>';
-
+	//echo '<input type="submit" value="Done"/></form>';
 	echo $course_prereq_json;
-
 	echo
 	"<script>
 
@@ -92,5 +103,6 @@
 		}
 	}
 	</script>";
+	
 	
 ?>

@@ -1,5 +1,5 @@
 <?php
-	echo "<form method='GET' action='programtree.php'>";
+	//echo "<form method='GET' action='programtree.php'>";
 	echo "<table>";
 
 	// Get all the degree names from the database and put it in a select box
@@ -12,7 +12,7 @@
 	$degree_array = $degree_query_rs->fetch_all(MYSQLI_ASSOC);
 	
 	echo '<tr><td>Degree:</td>';
-	echo '<td><select name="degree">';
+	echo '<td><select id="degree" name="degree">';
 
 	foreach($degree_array as $degree) {
 		echo "<option value='$degree[degree_name]'>$degree[degree_name]</option>";
@@ -25,7 +25,7 @@
 	'<tr>
 		<td>On Track:</td>
 		<td>
-		<input onchange="isOnTrack(this)" checked type="radio" name="ontrack" value="true">Yes</input><input onchange="isOnTrack(this)" type="radio" name="ontrack" value="false">No</input>
+		<input onchange="isOnTrack(this)" checked type="radio" name="ontrack" id="ontrack" value="true">Yes</input><input onchange="isOnTrack(this)" type="radio" name="ontrack" value="false">No</input>
 		</td>
 	</tr>';
 
@@ -40,7 +40,11 @@
 
 	echo '</table>';
 
-	echo '<input type="submit" value="Done"/></form>';
+	//echo '<input type="submit" value="Done"/></form>';
+	// Replacing form with AJAX because I need to be able session paramaters
+	// dynamically, and not when the page is first created.
+	echo '<button onclick="postLogin();" >Done</button>';
 
 	echo '<script src="js/splash.js"></script>';
+	echo '<script src="js/login.js"></script>';
 ?>
