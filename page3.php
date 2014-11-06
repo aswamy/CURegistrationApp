@@ -1,7 +1,11 @@
 <?php
 	echo '<script src="js/validateSelection.js"></script>';
-
+	session_start();
 	$query  = explode('&', $_SERVER['QUERY_STRING']);
+	//$degree = $_SESSION['degree'];
+	$degree = "SE";
+	$year_status = 1;
+	//$year_status = $_SESSION['year_status'];
 	$params = array();
 
 	$finishedCourseList = array();
@@ -28,7 +32,7 @@
 		trigger_error('Connection to database has failed');
 	}
 
-	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$_GET[degree]' ORDER BY p.course_year, p.course_semester";
+	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' AND o.course_year_status = $year_status ORDER BY p.course_year, p.course_semester";
 	$courses_query_rs = $conn->query($courses_query);
 	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 	$course_prereq_json = "{";
@@ -128,7 +132,7 @@ echo "<script>" . "setFinishedCourses(" . json_encode($finishedCourseList) . ");
 	if ($conn->connect_error) {
 		trigger_error('Connection to database has failed');
 	}
-	$courses_query = "SELECT * FROM cu_running_courses WHERE course_name IN $formattedValidCourses;"; 
+	$courses_query = "SELECT r.*, o.course_has_lab FROM cu_running_courses r lEFT JOIN cu_offered_courses o ON r.course_name = o.course_name WHERE r.course_name IN $formattedValidCourses;"; 
 	//echo "\r\n" . $courses_query . "\r\n";
 	$courses_query_rs = $conn->query($courses_query);
 	if(!$courses_query_rs){
@@ -136,10 +140,15 @@ echo "<script>" . "setFinishedCourses(" . json_encode($finishedCourseList) . ");
 	}
 	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 
+
+	$courseHasLabArr = array();
+	echo "<form method='GET' action='page4.php'>";
 	echo "<table>";
 	foreach($courses_array as $course){
+		$name = $course['course_name'];
+		$courseHasLabArr[$name] = $course['course_has_lab'];
 		echo "<tr>";
-		echo "<td>" . "<input type=checkbox name=" . $course['course_name'] . "-" . $course['course_section'] . " value=" . $course['course_name'] . "-" . $course['course_section'] .  " onclick=" . '"' . "onChangeCheckBox (this)" . '"' .">";
+		echo "<td>" . "<input type=checkbox name=" . $course['course_name'] . "-" . $course['course_section'] . " value='on' onclick=" . '"' . "onChangeCheckBox (this)" . '"' .">";
 		echo "<td>" . $course['course_name'] . "</td>";
 		echo "<td>" . $course['course_section'] . "</td>";
 		echo "<td>" . $course['class_type'] . "</td>";
@@ -151,6 +160,10 @@ echo "<script>" . "setFinishedCourses(" . json_encode($finishedCourseList) . ");
 		echo "</tr>";
 	} 
 	echo "</table>";
-	
+
+	echo "</br>";
+	echo '<input id="page3Submit" type="submit" value="Submit">';
+	echo "</form>";
+	echo "<script>" . "setHasLabArr(" . json_encode($courseHasLabArr) . "); </script>";
 
 ?>

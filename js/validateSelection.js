@@ -2,17 +2,19 @@
 var selectedCourses = [];
 var jsonPrereqs = [];
 var finishedCourses = [];
+var hasLabArr = [];
 
 function onChangeCheckBox(checkBox) {
 	
 	if(checkBox.checked){
-		selectedCourses[selectedCourses.length] = checkBox.value;
+		selectedCourses[selectedCourses.length] = checkBox.name;
 	} else{
-		selectedCourses.splice(selectedCourses.indexOf(checkBox.value), 1);
+		selectedCourses.splice(selectedCourses.indexOf(checkBox.name), 1);
 	}
 
-	var className = checkBox.value.substring(0,8);
+	var className = checkBox.name.substring(0,8);
 	validateCourseSelection(className);
+	validateLabSelected(className);
 
 }
 
@@ -22,6 +24,10 @@ function setJsonPrereqs(jsonString){
 
 function setFinishedCourses(courses) {
 	finishedCourses = courses;
+}
+
+function setHasLabArr(courses) {
+	hasLabArr = courses;
 }
 
 function validateCourseSelection(course) {
@@ -52,11 +58,72 @@ function validateCourseSelection(course) {
 					}
 				}
 			}
-			if(!accept) console.log("missing prereq for " + className);
+			if(!accept) {
+				console.log("missing prereq for " + className);
+				disableSubmit();
+			} else{
+				enableSubmit();
+			}
 		}
 
 	}
 
+}
+
+function validateLabSelected(className) {
+	var testArray = [];
+	var hasCourse = false;
+	var hasLab = false;
+
+	if(hasLabArr[className] = 0) {
+		return;
+	}
+
+	for(var a in selectedCourses) {
+		var index = selectedCourses[a].indexOf(className);
+		if(index > -1) {
+			var section = selectedCourses[a].substring(9,selectedCourses[a].length);
+			
+			var isnum = /\d$/.test(section);
+			if(!isnum) { 
+				hasCourse = true;
+			} else {
+				hasLab = true;
+			}
+		}
+	}
+
+	/*for(var a in selectedCourses) {
+		var courseName = selectedCourses[a].substring(0,8);
+
+		if(hasLabArr[courseName] == 1) { //if there is a lab
+			var section = selectedCourses[a].substring(9,selectedCourses[a].length);
+			if(isNaN(section[section.length-1]) { //not a lab (add to array)
+				testArray[testArray.length] = courseName;
+			}
+		}
+	}
+
+	for(var a in selectedCourses) {
+		var courseName = selectedCourses[a].substring(0,8);
+
+		if(hasLabArr[courseName] == 1) {
+			var section = selectedCourses[a].substring(9,selectedCourses[a].length);
+			if(!isNaN(section[section.length-1]) { //is a lab (remove from array if present, add otherwise) any remaining entries means either lab or course wasn't selected
+												//whereas you need both
+				$index = selectedCourses.indexOf(courseName);
+				if(index == -1) {
+					testArray[testArray.length] = courseName;
+				} else {
+					testArray.splice(index,1);
+				}
+			}
+		}
+	}
+	*/
+	if(!hasCourse || !hasLab) {
+		disableSubmit();
+	}
 }
 
 function isConcurrentSelected(course) {
@@ -80,4 +147,12 @@ function isChecked(course) {
 		}
 	}
 	return false;
+}
+
+function disableSubmit() {
+	document.getElementById("page3Submit").disabled = true;
+}
+
+function enableSubmit() {
+	document.getElementById("page3Submit").disabled = false;
 }
