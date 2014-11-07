@@ -3,6 +3,9 @@ var selectedCourses = [];
 var jsonPrereqs = [];
 var finishedCourses = [];
 var hasLabArr = [];
+var missingPrereqs = []; //array of classes missing prereqs (helps user know which classes are causing problems)
+var duplicatesExist = false;
+var missingOther = []; //array of classes that are missing their lab/class component
 
 function onChangeCheckBox(checkBox) {
 	
@@ -15,6 +18,8 @@ function onChangeCheckBox(checkBox) {
 	var className = checkBox.name.substring(0,8);
 	validateCourseSelection(className);
 	validateLabSelected(className);
+	validateAllSelectionsForDuplicates();
+	setRequirementsMsg();
 
 }
 
@@ -28,6 +33,37 @@ function setFinishedCourses(courses) {
 
 function setHasLabArr(courses) {
 	hasLabArr = courses;
+}
+
+function validateAllSelectionsForDuplicates() {
+	var duplicate = false;
+	for(var b in selectedCourses) {
+		var courseFull = selectedCourses[b];
+		var course = courseFull.substring(0,8);
+		var section = courseFull.substring(9,courseFull.length);
+		var isLab = /\d$/.test(section);
+		for(var a in selectedCourses) {
+			var current = selectedCourses[a];
+			var currentName = current.substring(0,8);
+			var curSection = current.substring(9,current.length);
+			var curIsLab = /\d$/.test(curSection);
+			if(course == currentName && isLab == curIsLab && section != curSection) {
+				//we have a duplicate course
+				duplicate = true;
+				break;
+			} 
+		}
+		if(duplicate) {
+			break;
+		}
+	}
+	if(duplicate) {
+		duplicatesExist = true;
+		disableSubmit();
+	} else {
+		duplicatesExist = false;
+		enableSubmit();
+	}
 }
 
 function validateCourseSelection(course) {
@@ -59,7 +95,7 @@ function validateCourseSelection(course) {
 				}
 			}
 			if(!accept) {
-				console.log("missing prereq for " + className);
+				//console.log("missing prereq for " + className);
 				disableSubmit();
 			} else{
 				enableSubmit();
@@ -92,37 +128,13 @@ function validateLabSelected(className) {
 			}
 		}
 	}
-
-	/*for(var a in selectedCourses) {
-		var courseName = selectedCourses[a].substring(0,8);
-
-		if(hasLabArr[courseName] == 1) { //if there is a lab
-			var section = selectedCourses[a].substring(9,selectedCourses[a].length);
-			if(isNaN(section[section.length-1]) { //not a lab (add to array)
-				testArray[testArray.length] = courseName;
-			}
-		}
-	}
-
-	for(var a in selectedCourses) {
-		var courseName = selectedCourses[a].substring(0,8);
-
-		if(hasLabArr[courseName] == 1) {
-			var section = selectedCourses[a].substring(9,selectedCourses[a].length);
-			if(!isNaN(section[section.length-1]) { //is a lab (remove from array if present, add otherwise) any remaining entries means either lab or course wasn't selected
-												//whereas you need both
-				$index = selectedCourses.indexOf(courseName);
-				if(index == -1) {
-					testArray[testArray.length] = courseName;
-				} else {
-					testArray.splice(index,1);
-				}
-			}
-		}
-	}
-	*/
-	if(!hasCourse || !hasLab) {
+	if((!hasCourse && hasLab) || (!hasLab && hasCourse)) {
+		if(missingOther.indexOf(className) == -1) missingOther[missingOther.length] = className;
 		disableSubmit();
+	} else {
+		if(missingOther.indexOf(className) != -1) {
+			missingOther.splice(missingOther.indexOf(className),1);
+		}
 	}
 }
 
@@ -155,4 +167,18 @@ function disableSubmit() {
 
 function enableSubmit() {
 	document.getElementById("page3Submit").disabled = false;
+}
+
+function setRequirementsMsg() {
+	var msg = "";
+	if(missingOther.length > 0) msg += "Missing lab/class segment of: ";
+	for(var missing in missingOther) {
+		msg += missingOther[missing];
+		if(missing+1 != missingOther.length) {
+			msg += ", ";
+		}
+	}
+	msg += "\n";
+	if(duplicatesExist) msg += "duplicates classes and/or labs exist";
+	console.log(msg);
 }
