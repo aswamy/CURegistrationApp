@@ -4,7 +4,7 @@
 	$_SESSION['student_num'] = (isset($_GET['studentnum']) ? $_GET['studentnum'] : null);
 	$_SESSION['degree'] = (isset($_GET['degree']) ? $_GET['degree'] : null);
 	$_SESSION['on_track'] = (isset($_GET['ontrack']) ? $_GET['ontrack'] : null);
-	$_SESSION['years_completed'] = (isset($_GET['yearscompleted']) ? $_GET['yearscompleted'] : 1);
+	$_SESSION['years_completed'] = (isset($_GET['yearscompleted']) ? $_GET['yearscompleted'] : 0);
 	
 	echo '<link rel="stylesheet" type="text/css" href="css/PrerequisiteTree.css" />';
 	
