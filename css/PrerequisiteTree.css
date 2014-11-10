@@ -1,8 +1,21 @@
+.courseTable {
+	background-color: #cf112d;
+}
+
 .courseElement {
 	width: 110px;
 	height: 110px;
 	background-color: lightgray;
 	margin: 3px 3px 3px 3px;
+}
+
+.courseTitle {
+	text-align: center;
+	color: white;
+}
+
+.courseAlignment {
+	vertical-align:top;
 }
 
 ul.menuBar {

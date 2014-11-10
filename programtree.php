@@ -1,8 +1,10 @@
 <?php
-	//
-	//Resume the session that was initialized on the previous page
 	session_start();
-	//Access the session params 
+	
+	$_SESSION['degree'] = $_GET['degree'];
+	$_SESSION['on_track'] = $_GET['ontrack'];
+	$_SESSION['year_status'] = (isset($_GET['yearstatus']) ? $_GET['yearstatus'] : null);
+
 	$degree = $_SESSION['degree'];
 	$on_track = $_SESSION['on_track'];
 	$year_status = $_SESSION['year_status'];
@@ -11,33 +13,44 @@
 	echo "degree:".$degree."</br>";
 	echo "ontrack:".$on_track."</br>";
 	echo "yearstatus:".$year_status."</br>";
+	echo "<br>";
 	
 	echo '<link rel="stylesheet" type="text/css" href="css/PrerequisiteTree.css" />';
-	//echo "<form method='GET' action='splash.php'>";
+	echo "<form method='GET' action='splash.php'>";
+
+	echo '<input type="submit" value="Done"/><br><br>';
 
 	$conn = new mysqli('localhost', 'root', '', 'sysc4504');
 	if ($conn->connect_error) {
 		trigger_error('Connection to database has failed');
 	}
 
-	//$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$_GET[degree]' ORDER BY p.course_year, p.course_semester";
 	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' ORDER BY p.course_year, p.course_semester";
 	$courses_query_rs = $conn->query($courses_query);
 	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 
 	$course_prereq_json = "{";
-	$course_current_year = 1;
-	$course_current_semester = 'fall';
+	$course_current_year = 0;
+	$course_current_semester = '';
 
-	echo "<div><div style='float:left'><div>Year $course_current_year, $course_current_semester</div>";
+	echo "<table><tr class='courseTable'>";
 
 	foreach($courses_array as $course) {
 		$course_name = $course['course_prerequisite'];
 		
 		if($course['course_semester'] != $course_current_semester || $course['course_year'] != $course_current_year) {
+			
+			if($course_current_year != 0) {
+				echo '</td>';
+			}
+
+			if($course['course_year'] != $course_current_year) {
+				echo '<td style="width:10px; background-color: white"></td>';
+			}
+
 			$course_current_year = $course['course_year'];
 			$course_current_semester = $course['course_semester'];			
-			echo "</div><div style='float:left'><div>Year $course_current_year, $course_current_semester</div>";
+			echo "<td class='courseAlignment'><div class='courseTitle'>Year $course_current_year, $course_current_semester</div>";
 		}
 		
 		echo "<div class=courseElement id=$course[course_name] onmouseover=highlightPrerequisites(this) onmouseout=restoreCourseElements()><div>$course[course_name]</div><div><input name='$course[course_name]' type='checkbox'></input></div></div>";
@@ -47,16 +60,15 @@
 		}
 	}
 
-	echo '</div></div>';
+	echo '</tr></table>';
 
 	$course_prereq_json = rtrim($course_prereq_json, ',');
 	$course_prereq_json .= "}";
 
+	echo '<br><input type="submit" value="Done"/></form>';
+	echo '</form>';
 	echo '<p id="displayPreq"></p>';
 	
-	
-	//echo '<input type="submit" value="Done"/></form>';
-	echo $course_prereq_json;
 	echo
 	"<script>
 
@@ -103,6 +115,4 @@
 		}
 	}
 	</script>";
-	
-	
 ?>

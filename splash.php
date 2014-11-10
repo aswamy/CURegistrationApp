@@ -1,5 +1,5 @@
 <?php
-	//echo "<form method='GET' action='programtree.php'>";
+	echo "<form method='GET' action='programtree.php'>";
 	echo "<table>";
 
 	// Get all the degree names from the database and put it in a select box
@@ -39,12 +39,7 @@
 	</tr>';
 
 	echo '</table>';
-
-	//echo '<input type="submit" value="Done"/></form>';
-	// Replacing form with AJAX because I need to be able session paramaters
-	// dynamically, and not when the page is first created.
-	echo '<button onclick="postLogin();" >Done</button>';
-
+	echo '<input type="submit" value="Done"/></form>';
+	echo '</form>';
 	echo '<script src="js/splash.js"></script>';
-	echo '<script src="js/login.js"></script>';
 ?>
