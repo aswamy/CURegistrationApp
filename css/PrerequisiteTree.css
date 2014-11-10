@@ -7,9 +7,17 @@
 	height: 110px;
 	background-color: lightgray;
 	margin: 3px 3px 3px 3px;
+	border-width: 3px;
+	border-style: solid;
+	border-color: black;
+	text-align: center;
 }
 
+input[type=checkbox] {width:20px; height:20px;}
+
 .courseTitle {
+	vertical-align: middle;
+	height: 30px;
 	text-align: center;
 	color: white;
 }

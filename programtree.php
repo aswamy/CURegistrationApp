@@ -1,18 +1,19 @@
 <?php
 	session_start();
-	
-	$_SESSION['degree'] = $_GET['degree'];
-	$_SESSION['on_track'] = $_GET['ontrack'];
+
+	$_SESSION['student_num'] = (isset($_GET['studentnum']) ? $_GET['studentnum'] : null);
+	$_SESSION['degree'] = (isset($_GET['degree']) ? $_GET['degree'] : null);
+	$_SESSION['on_track'] = (isset($_GET['ontrack']) ? $_GET['ontrack'] : null);
 	$_SESSION['year_status'] = (isset($_GET['yearstatus']) ? $_GET['yearstatus'] : null);
 
 	$degree = $_SESSION['degree'];
 	$on_track = $_SESSION['on_track'];
 	$year_status = $_SESSION['year_status'];
 	//Print the session parameters for demonstration 
-	echo "This is the session data:"."</br>";
-	echo "degree:".$degree."</br>";
-	echo "ontrack:".$on_track."</br>";
-	echo "yearstatus:".$year_status."</br>";
+	echo "This is the session data:"."<br>";
+	echo "degree:".$degree."<br>";
+	echo "ontrack:".$on_track."<br>";
+	echo "yearstatus:".$year_status."<br>";
 	echo "<br>";
 	
 	echo '<link rel="stylesheet" type="text/css" href="css/PrerequisiteTree.css" />';
@@ -49,11 +50,11 @@
 			}
 
 			$course_current_year = $course['course_year'];
-			$course_current_semester = $course['course_semester'];			
+			$course_current_semester = $course['course_semester'];
 			echo "<td class='courseAlignment'><div class='courseTitle'>Year $course_current_year, $course_current_semester</div>";
 		}
 		
-		echo "<div class=courseElement id=$course[course_name] onmouseover=highlightPrerequisites(this) onmouseout=restoreCourseElements()><div>$course[course_name]</div><div><input name='$course[course_name]' type='checkbox'></input></div></div>";
+		echo "<div class=courseElement id=$course[course_name] onmouseover=highlightPrerequisites(this) onmouseout=restoreCourseElements()><div>$course[course_name]</div><br><div><input name='$course[course_name]' type='checkbox'></input></div></div>";
 
 		if ($course_name != null) {
 			$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";
