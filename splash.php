@@ -1,9 +1,7 @@
 <?php
-
 	echo '<link rel="stylesheet" type="text/css" href="css/Splash.css" />';
-	echo "<div class='titleContainer'><div><img class='titleImage' src='img/logo-cu-shield-outlined.svg' /></div><span class='title'>Carleton University Registration App</span></div>";
-	echo "<div class='mainContainer'>";
-	echo "<form class='inputForm' method='GET' action='programtree.php'>";
+	include('header.html');
+	echo "<div class='mainContainer'><form class='inputForm' method='GET' action='programtree.php'>";
 	echo "<table class='inputsContainer'>";
 
 	// Get all the degree names from the database and put it in a select box

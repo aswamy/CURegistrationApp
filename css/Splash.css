@@ -1,27 +1,12 @@
-.title {
-	color: white;
-	line-height: 100%;
-	font-size: 34px;
-}
-
-.titleImage {
-	padding-top: 10px;
-	padding-bottom: 10px;	
-}
-
-.titleContainer {
-	background-color: #191919;
-	text-align: center;
-	height: 120px;	
-}
-
 .mainContainer {
 	background-color: #cf112d;
 	text-align: center;
+	max-height: 100%;
+	padding: 30 10 30 10;
 }
 
 .inputForm {
-	background-color: gray;
+	background-color: lightgray;
 	text-align: center;
 	width: 350px;
 	margin: 0 auto;

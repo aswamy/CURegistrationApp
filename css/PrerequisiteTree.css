@@ -1,4 +1,13 @@
+.mainContainer {
+	text-align: center;
+	padding: 10 0 10 0;
+}
+
 .courseTable {
+	background-color: lightgray;
+}
+
+.courseRow {
 	background-color: #cf112d;
 }
 
@@ -13,8 +22,6 @@
 	text-align: center;
 }
 
-input[type=checkbox] {width:20px; height:20px;}
-
 .courseTitle {
 	vertical-align: middle;
 	height: 30px;
@@ -24,6 +31,10 @@ input[type=checkbox] {width:20px; height:20px;}
 
 .courseAlignment {
 	vertical-align:top;
+}
+
+input[type=checkbox] {
+	width:20px; height:20px;
 }
 
 ul.menuBar {

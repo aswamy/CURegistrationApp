@@ -9,15 +9,13 @@
 	$degree = $_SESSION['degree'];
 	$on_track = $_SESSION['on_track'];
 	$year_status = $_SESSION['year_status'];
-	//Print the session parameters for demonstration 
-	echo "This is the session data:"."<br>";
-	echo "degree:".$degree."<br>";
-	echo "ontrack:".$on_track."<br>";
-	echo "yearstatus:".$year_status."<br>";
-	echo "<br>";
+	$studentnum = $_SESSION['student_num'];
 	
 	echo '<link rel="stylesheet" type="text/css" href="css/PrerequisiteTree.css" />';
-	echo "<form method='GET' action='splash.php'>";
+	
+	include('header.html');
+
+	echo "<div class='mainContainer'><form method='GET' action='splash.php'>";
 
 	echo '<input type="submit" value="Done"/><br><br>';
 
@@ -34,7 +32,7 @@
 	$course_current_year = 0;
 	$course_current_semester = '';
 
-	echo "<table><tr class='courseTable'>";
+	echo "<table style='margin: 0 auto'><tr class='courseRow'>";
 
 	foreach($courses_array as $course) {
 		$course_name = $course['course_prerequisite'];
@@ -43,10 +41,10 @@
 			
 			if($course_current_year != 0) {
 				echo '</td>';
-			}
-
-			if($course['course_year'] != $course_current_year) {
-				echo '<td style="width:10px; background-color: white"></td>';
+			
+				if($course['course_year'] != $course_current_year) {
+					echo '<td style="width:10px; background-color: white"></td>';
+				}
 			}
 
 			$course_current_year = $course['course_year'];
@@ -67,7 +65,7 @@
 	$course_prereq_json .= "}";
 
 	echo '<br><input type="submit" value="Done"/></form>';
-	echo '</form>';
+	echo '</form></div>';
 	echo '<p id="displayPreq"></p>';
 	
 	echo

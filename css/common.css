@@ -1,0 +1,16 @@
+.title {
+	color: white;
+	line-height: 100%;
+	font-size: 34px;
+}
+
+.titleImage {
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+
+.titleContainer {
+	background-color: #191919;
+	text-align: center;
+	height: 140px;
+}
