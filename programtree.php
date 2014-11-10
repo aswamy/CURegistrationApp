@@ -4,12 +4,7 @@
 	$_SESSION['student_num'] = (isset($_GET['studentnum']) ? $_GET['studentnum'] : null);
 	$_SESSION['degree'] = (isset($_GET['degree']) ? $_GET['degree'] : null);
 	$_SESSION['on_track'] = (isset($_GET['ontrack']) ? $_GET['ontrack'] : null);
-	$_SESSION['year_status'] = (isset($_GET['yearstatus']) ? $_GET['yearstatus'] : null);
-
-	$degree = $_SESSION['degree'];
-	$on_track = $_SESSION['on_track'];
-	$year_status = $_SESSION['year_status'];
-	$studentnum = $_SESSION['student_num'];
+	$_SESSION['years_completed'] = (isset($_GET['yearscompleted']) ? $_GET['yearscompleted'] : 1);
 	
 	echo '<link rel="stylesheet" type="text/css" href="css/PrerequisiteTree.css" />';
 	
@@ -24,13 +19,14 @@
 		trigger_error('Connection to database has failed');
 	}
 
-	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' ORDER BY p.course_year, p.course_semester";
+	$courses_query = "SELECT p.*, o.course_prerequisite FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$_SESSION[degree]' ORDER BY p.course_year, p.course_semester";
 	$courses_query_rs = $conn->query($courses_query);
 	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 
 	$course_prereq_json = "{";
 	$course_current_year = 0;
 	$course_current_semester = '';
+	$course_completed = 'checked';
 
 	echo "<table style='margin: 0 auto'><tr class='courseRow'>";
 
@@ -49,10 +45,12 @@
 
 			$course_current_year = $course['course_year'];
 			$course_current_semester = $course['course_semester'];
+
+			if($course_current_year > $_SESSION['years_completed']) $course_completed = '';
 			echo "<td class='courseAlignment'><div class='courseTitle'>Year $course_current_year, $course_current_semester</div>";
 		}
 		
-		echo "<div class=courseElement id=$course[course_name] onmouseover=highlightPrerequisites(this) onmouseout=restoreCourseElements()><div>$course[course_name]</div><br><div><input name='$course[course_name]' type='checkbox'></input></div></div>";
+		echo "<div class=courseElement id=$course[course_name] onmouseover=highlightPrerequisites(this) onmouseout=restoreCourseElements()><div>$course[course_name]</div><br><div><input name='$course[course_name]' $course_completed type='checkbox'></input></div></div>";
 
 		if ($course_name != null) {
 			$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";

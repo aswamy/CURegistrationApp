@@ -37,9 +37,9 @@
 	// If the student is on track, let him/her choose, what year he/she is in
 	echo 
 	'<tr>
-		<td>Year Status:</td>
+		<td>Years Completed:</td>
 		<td>
-			<select class="inputField" name="yearstatus" id="yearstatus"><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
+			<select class="inputField" name="yearscompleted" id="yearscompleted"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
 		</td>
 	</tr>';
 
