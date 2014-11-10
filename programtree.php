@@ -26,7 +26,10 @@
 	$course_prereq_json = "{";
 	$course_current_year = 0;
 	$course_current_semester = '';
-	$course_completed = 'checked';
+
+	// When a user says he has completed a year of courses, check all of those courses
+	// and don't allow him/her to uncheck those boxes
+	$course_completed = 'checked onclick="return false"';
 
 	echo "<table style='margin: 0 auto'><tr class='courseRow'>";
 
@@ -37,10 +40,7 @@
 			
 			if($course_current_year != 0) {
 				echo '</td>';
-			
-				if($course['course_year'] != $course_current_year) {
-					echo '<td style="width:10px; background-color: white"></td>';
-				}
+				if($course['course_year'] != $course_current_year) echo '<td style="width:10px; background-color: white"></td>';
 			}
 
 			$course_current_year = $course['course_year'];
