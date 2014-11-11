@@ -6,6 +6,7 @@ var hasLabArr = [];
 var missingPrereqs = []; //array of classes missing prereqs (helps user know which classes are causing problems)
 var duplicatesExist = false;
 var missingOther = []; //array of classes that are missing their lab/class component
+var labSelected = true;
 
 function onChangeCheckBox(checkBox) {
 	
@@ -15,12 +16,23 @@ function onChangeCheckBox(checkBox) {
 		selectedCourses.splice(selectedCourses.indexOf(checkBox.name), 1);
 	}
 
-	var className = checkBox.name.substring(0,8);
-	validateCourseSelection(className);
-	validateLabSelected(className);
-	validateAllSelectionsForDuplicates();
-	setRequirementsMsg();
+	//var className = checkBox.name.substring(0,8);
+	labSelected = validateLabSelectedtest();
+	check();
+}
 
+function check(){
+	myAjaxFunc();
+	var hasPrereqs = validateCourseSelection();
+	var noDuplicates = validateAllSelectionsForDuplicates();
+	var noConflicts = checkTimeTableConflict();
+	if(hasPrereqs && labSelected && noConflicts && noDuplicates){
+		enableSubmit();
+	} else{
+		disableSubmit();
+	}
+	setRequirementsMsg();
+	
 }
 
 function setJsonPrereqs(jsonString){
@@ -59,14 +71,14 @@ function validateAllSelectionsForDuplicates() {
 	}
 	if(duplicate) {
 		duplicatesExist = true;
-		disableSubmit();
+		return false;
 	} else {
 		duplicatesExist = false;
-		enableSubmit();
+		return true;
 	}
 }
 
-function validateCourseSelection(course) {
+function validateCourseSelection() {
 	for(var className in jsonPrereqs){
 		if(typeof(jsonPrereqs[className]) == "object" && isChecked(className)) {
 			for(var nextLevel in jsonPrereqs[className]) {
@@ -96,23 +108,28 @@ function validateCourseSelection(course) {
 			}
 			if(!accept) {
 				//console.log("missing prereq for " + className);
-				disableSubmit();
+				return false;
 			} else{
-				enableSubmit();
+				return true;
 			}
 		}
 
 	}
+	return true;
 
 }
 
-function validateLabSelected(className) {
+function validateLabSelected(checkBox) {
+	var fullClassName = checkBox.name;
 	var testArray = [];
+	var className = fullClassName.substring(0,8);
+	var classSection = fullClassName.substring(9,fullClassName.length);
 	var hasCourse = false;
 	var hasLab = false;
+	var rightSection = false;
 
 	if(hasLabArr[className] = 0) {
-		return;
+		return true;
 	}
 
 	for(var a in selectedCourses) {
@@ -130,13 +147,90 @@ function validateLabSelected(className) {
 	}
 	if((!hasCourse && hasLab) || (!hasLab && hasCourse)) {
 		if(missingOther.indexOf(className) == -1) missingOther[missingOther.length] = className;
-		disableSubmit();
+		return false;
 	} else {
 		if(missingOther.indexOf(className) != -1) {
 			missingOther.splice(missingOther.indexOf(className),1);
 		}
+		return true;
 	}
 }
+
+
+
+
+
+
+
+
+function validateLabSelectedtest() {
+	var testArray = [];
+	//var className = fullClassName.substring(0,8);
+	//var classSection = fullClassName.substring(9,fullClassName.length);
+	var validated = true;
+	
+	for(var j in selectedCourses) {
+		var currentHasCourse = false;
+		var currentHasLab = false;
+		var currentRightSection = false;
+		var fullClassName = selectedCourses[j]
+		var className = fullClassName.substring(0,8);
+		var classSection = fullClassName.substring(9,fullClassName.length);
+		var isLab = false;
+		if(/\d$/.test(classSection)) {
+			isLab = true;
+			hasLab = true;
+		}
+		if(hasLabArr[className] = 0) {
+			return true;
+		}
+
+		for(var a in selectedCourses) {
+			var index = selectedCourses[a].indexOf(className);
+			if(index > -1) {
+				var section = selectedCourses[a].substring(9,selectedCourses[a].length);
+				var isnum = /\d$/.test(section);
+				var isAtoF = /[A-F]/.test(section.substring(0,1));
+				var isAtoF2 = /[A-F]/.test(classSection.substring(0,1));
+				if(!isLab) {
+					if(isnum) {
+						currentHasCourse = true;
+						currentHasLab = true;
+						if(classSection.substring(0,1) == section.substring(0,1) || !isAtoF) {
+							currentRightSection = true;
+						}
+					}
+				} else{
+					if(!isnum){
+						currentHasLab = true;
+						currentHasCourse = true;
+						if(classSection.substring(0,1) == section.substring(0,1) || !isAtoF2) {
+							currentRightSection = true;
+						}
+					}
+				}
+			}
+		}
+
+		if(currentHasCourse && currentHasLab && currentRightSection){
+			//do nothing
+		} else{
+			validated = false;
+			break;
+		}
+	}
+	return validated;
+}
+
+
+
+
+
+
+
+
+
+
 
 function isConcurrentSelected(course) {
 	return isChecked(course);
@@ -181,4 +275,32 @@ function setRequirementsMsg() {
 	msg += "\n";
 	if(duplicatesExist) msg += "duplicates classes and/or labs exist";
 	console.log(msg);
+}
+
+function myAjaxFunc() {
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(request.readyState == 4 && request.status == 200){
+			document.getElementById("timeTable").innerHTML = request.responseText;
+		}
+	}
+	var getRequest = "timeTable.php?";
+	for(var a in selectedCourses) {
+		getRequest += selectedCourses[a] + "=on&";
+	}
+	getRequest = getRequest.substring(0, getRequest.length - 1);
+	request.open("GET", getRequest, true);
+	request.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	request.send(null);
+
+
+}
+
+function checkTimeTableConflict() {
+	var a = document.getElementById("conflict").value;
+	if(a == "conflict"){
+		return false;
+	} else{
+		return true;
+	}
 }

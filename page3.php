@@ -1,5 +1,36 @@
 <?php
 	echo '<script src="js/validateSelection.js"></script>';
+	echo '<style type="text/css">
+	#courseSelection td
+	{
+		width:10%;
+	}
+
+	#courseSelection tr
+	{
+		height:25px;
+	}
+
+	#courseSelection {
+		border:2px solid;
+		border-radius: 15px;
+		height:400px;
+		overflow-y:scroll;
+	}
+
+	#tableHeader
+	{
+		width:75%;
+		display:block;
+		margin-left:auto;
+		margin-right:auto;
+	}
+	#tableHeader td
+	{
+		width:10%;
+		height:25px;
+	}
+	</style>';
 	session_start();
 	$query  = explode('&', $_SERVER['QUERY_STRING']);
 	//$degree = $_SESSION['degree'];
@@ -24,7 +55,7 @@
     } 
     $inString = rtrim($courselist, ",");
     $inString = "(".$inString.")";
-    //echo $inString;
+    //echo $inString;i
 
 
 	$conn = new mysqli('localhost', 'root', '', 'sysc4504');
@@ -143,7 +174,11 @@ echo "<script>" . "setFinishedCourses(" . json_encode($finishedCourseList) . ");
 
 	$courseHasLabArr = array();
 	echo "<form method='GET' action='page4.php'>";
-	echo "<table>";
+	echo '<div id="timeTable"></div>';
+	//echo '<input id="conflict" type="hidden" value="none"/>';
+	echo '<div id="TableHeader"><table><tr><td></td><td>Course</td><td>Section</td><td>Type</td><td>Term</td><td>Seats Left</td><td>Days</td><td>Start time</td><td>End Time</td></tr></table>';
+	echo '<div id="courseSelection"><table>';
+	//echo '<tr><td></td><td>Course</td><td>Section</td><td>Type</td><td>Term</td><td>Seats Left</td><td>Days</td><td>Start time</td><td>End Time</td></tr>';
 	foreach($courses_array as $course){
 		$name = $course['course_name'];
 		$courseHasLabArr[$name] = $course['course_has_lab'];
@@ -159,11 +194,12 @@ echo "<script>" . "setFinishedCourses(" . json_encode($finishedCourseList) . ");
 		echo "<td>" . $course['class_end'] . "</td>";
 		echo "</tr>";
 	} 
-	echo "</table>";
+	echo '</table></div></div>';
 
 	echo "</br>";
 	echo '<input id="page3Submit" type="submit" value="Submit">';
 	echo "</form>";
-	echo "<script>" . "setHasLabArr(" . json_encode($courseHasLabArr) . "); </script>";
-
+	echo "<script>" . "setHasLabArr(" . json_encode($courseHasLabArr) . "); 
+			check();
+		 </script>";
 ?>
