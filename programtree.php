@@ -1,4 +1,9 @@
 <?php
+
+	echo '<body style="background-color: gray">';
+
+	require_once('yearstatus.php');
+
 	session_start();
 
 	$_SESSION['student_num'] = (isset($_GET['studentnum']) ? $_GET['studentnum'] : null);
@@ -40,7 +45,7 @@
 			
 			if($course_current_year != 0) {
 				echo '</td>';
-				if($course['course_year'] != $course_current_year) echo '<td style="width:10px; background-color: white"></td>';
+				if($course['course_year'] != $course_current_year) echo '<td style="width:10px; background-color: gray"></td>';
 			}
 
 			$course_current_year = $course['course_year'];
@@ -64,7 +69,8 @@
 
 	echo '<br><input type="submit" value="Done"/></form>';
 	echo '</form></div>';
-	echo '<p id="displayPreq"></p>';
+	echo '<p>Prerequisite: <span id="displayPreq"></span></p>';
+	echo '</body>';
 	
 	echo
 	"<script>
@@ -110,6 +116,7 @@
 		for (var i = 0; i < elements.length; i++) {
 			elements[i].style.background='lightgray';
 		}
+		document.getElementById('displayPreq').innerHTML = '';
 	}
 	</script>";
 ?>

@@ -1,4 +1,5 @@
 <?php
+	echo '<body style="background-color: gray">';
 	echo '<link rel="stylesheet" type="text/css" href="css/Splash.css" />';
 	include('header.html');
 	echo "<div class='mainContainer'><form class='inputForm' method='GET' action='programtree.php'>";
@@ -45,6 +46,6 @@
 
 	echo '</table>';
 	echo '<input type="submit" value="Done"/></form>';
-	echo '</form></div>';
+	echo '</form></div></body>';
 	echo '<script src="js/splash.js"></script>';
 ?>
