@@ -2,8 +2,6 @@
 
 	echo '<body style="background-color: gray">';
 
-	require_once('yearstatus.php');
-
 	session_start();
 
 	$_SESSION['student_num'] = (isset($_GET['studentnum']) ? $_GET['studentnum'] : null);
@@ -15,7 +13,7 @@
 	
 	include('header.html');
 
-	echo "<div class='mainContainer'><form method='GET' action='splash.php'>";
+	echo "<div class='mainContainer'><form method='POST' action='testyearstatus.php'>";
 
 	echo '<input type="submit" value="Done"/><br><br>';
 
