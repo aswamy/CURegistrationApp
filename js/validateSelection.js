@@ -6,7 +6,6 @@ var hasLabArr = [];
 var missingPrereqs = []; //array of classes missing prereqs (helps user know which classes are causing problems)
 var duplicatesExist = false;
 var missingOther = []; //array of classes that are missing their lab/class component
-var labSelected = true;
 
 function onChangeCheckBox(checkBox) {
 	
@@ -17,12 +16,12 @@ function onChangeCheckBox(checkBox) {
 	}
 
 	//var className = checkBox.name.substring(0,8);
-	labSelected = validateLabSelectedtest();
 	check();
 }
 
 function check(){
 	myAjaxFunc();
+	var labSelected = validateLabSelectedtest();
 	var hasPrereqs = validateCourseSelection();
 	var noDuplicates = validateAllSelectionsForDuplicates();
 	var noConflicts = checkTimeTableConflict();
@@ -79,43 +78,59 @@ function validateAllSelectionsForDuplicates() {
 }
 
 function validateCourseSelection() {
+	var accept = true;
 	for(var className in jsonPrereqs){
 		if(typeof(jsonPrereqs[className]) == "object" && isChecked(className)) {
 			for(var nextLevel in jsonPrereqs[className]) {
 				var nextElem1 = jsonPrereqs[className][nextLevel];
 				var accept = nextElem1.length == 0;
+				if(accept) { break; }
+				accept = true;
 				if(typeof(nextElem1) == "object") {
 					for(var deeper in nextElem1) {
 						var nextElem2 = nextElem1[deeper];
 						var innerAccept = false;
-						for(object in nextElem1[deeper]) {
-							var c = nextElem1[deeper][object];
-							var name = c.name;
-							var concurrent = c.concurrent;
+						if(nextElem2 instanceof Array){
+							for(object in nextElem2) {
+								var courseObj = nextElem2[object];
+								var name = courseObj.name;
+								var concurrent = courseObj.concurrent;
+								if(concurrent) {
+									if(isConcurrentSelected(name) || courseCompleted(name)) {
+										innerAccept = true;
+										break;
+									}
+								}
+							}
+							accept = innerAccept;
+							if(!innerAccept){
+								break;
+								//break;
+							}
+						} else { //its an object
+							var name = nextElem2.name;
+							var concurrent = nextElem2.concurrent;
 							if(concurrent) {
-								if(isConcurrentSelected(name) || courseCompleted(name)) {
-									innerAccept = true;
-									break;	
-								} 
+								if(!isConcurrentSelected(name) && !courseCompleted(name)) {
+									//return false;
+									accept = false;
+									break;
+								}
 							}
 						}
-						accept = innerAccept;
-						if(!innerAccept){
-							break;
-						}
+						
+						
 					}
 				}
 			}
 			if(!accept) {
 				//console.log("missing prereq for " + className);
-				return false;
-			} else{
-				return true;
-			}
+				break;
+			} 
 		}
 
 	}
-	return true;
+	return accept;
 
 }
 
