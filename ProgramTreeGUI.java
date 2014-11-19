@@ -5,11 +5,9 @@
  */
 package sysc4505;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import java.net.*;
-import java.io.*;
 import java.util.Arrays;
+import javax.swing.border.Border;
 
 /**
  *
@@ -17,16 +15,21 @@ import java.util.Arrays;
  */
 public class ProgramTreeGUI extends JPanel {
     
-       //Given a CSV string, construct a table by
-       //parsing the string for the list of courses
-       public ProgramTreeGUI(String programData) {
+    
+       //Given an array that contains: Degree, Student#,Years Done, On Track and
+       // a CSV list of courses, create a program tree
+       public ProgramTreeGUI(String[] programData) {
 
+        Border borderF = BorderFactory.createLineBorder(Color.BLACK, 1);
+        Border borderW = BorderFactory.createLineBorder(Color.GRAY, 1);
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipadx = 50;
+        c.ipady = 20;
         
-        String[] csvRows = programData.split(";");
+
+        String[] csvRows = programData[4].split(";");
         //The first row of the CSV is the column names
         //course_name,course_year,course_semester,course_size;
         String[] colNames = csvRows[0].split(",");
@@ -53,9 +56,9 @@ public class ProgramTreeGUI extends JPanel {
         toggling between rows, and if so that means we must
         move to the next column
         */
-        String prevSemester = "fall";
-        int col =0; //int to hold the column count
-        int row =0;
+        String prevSemester = "winter";
+        int col =-1; //int to hold the column count
+        int row =2; //Start at row 2 to leave room for column titles
         for (String csvRow : _csvRows) {
 
             String[] course = csvRow.split(",");
@@ -66,25 +69,43 @@ public class ProgramTreeGUI extends JPanel {
             if(!courseSemester.equals(prevSemester)){
 //                System.out.println("Semester has changed");
                 col++;
-                row=0;
+                row=2;
+                c.gridx=col;
+                c.gridy=row-1;
+                JLabel semesterTitle = new JLabel(course[course_semester] +","+course[course_year]);
+                Border border = course[course_semester].equals("fall") ? borderF : borderW;
+                semesterTitle.setBorder(border);
+                semesterTitle.setFont(new Font("Serif", Font.BOLD, 16));
+                add(semesterTitle, c);
                 prevSemester = courseSemester;
             }
 
-//            System.out.println("---");
-//            System.out.println(csvRow);
-//            System.out.print("Column:");
-//            System.out.println(col);
-//            System.out.print("Row:");
-//            System.out.println(row);
-
             c.gridx=col;
             c.gridy=row;
-            add(new JLabel(course[course_name]), c);
-            row++;
+            JLabel courseName = new JLabel(course[course_name]);
+            Border border = course[course_semester].equals("fall") ? borderF : borderW;
+            courseName.setBorder(border);
+            add(courseName, c);
+            c.gridy=row+1;
+            JCheckBox checkbox = new JCheckBox();
+            checkbox.setBorder(border);
+            checkbox.setBorderPainted(true);
+            add(checkbox, c);
+            row=row+2;
                     
-                }
+        }
+        //AFTER making the table we add a title.
+        //We do this because we don't know how long the gridwidth should be beforehand.
+        c.gridx=0;
+        c.gridy=0;
+        c.gridwidth=col+1;
+        JLabel title = new JLabel(programData[1]+ " : " + programData[0] + " ONTRACK:"+programData[3], JLabel.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 32));
+        add(title, c);
+        c.gridwidth=0;
   
        };
+
        
 }
 

@@ -9,7 +9,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.net.*;
 import java.io.*;
-import java.util.Arrays;
 
 /**
  *
@@ -80,8 +79,8 @@ public class LoginGUI extends JPanel{
         //On button press, get the necessary info needed to make
         //the program tree, and switch the cardGUI to the program tree
         button.addActionListener((ActionEvent e) -> {
-            String responseText = sendUserInputs();
-            JPanel programPanel = new ProgramTreeGUI(responseText);
+            String[] userData = sendUserInputs();
+            JPanel programPanel = new ProgramTreeGUI(userData);
             content.add(programPanel, nextPanelName);
             cardLayout.show(content, nextPanelName);
         });
@@ -89,19 +88,21 @@ public class LoginGUI extends JPanel{
         add(button, c);
     };
     
-    private String sendUserInputs(){
+    private String[] sendUserInputs(){
         
         String serverAddress = "http://" +host + "/view1b.php?viewType=JAVA";
+        String[] userData = new String[5]; //Store Degree, On Track, Year
         String responseText;
-        String studentNumber = studentNum.getText();
-        String degree        =String.valueOf(selectDegree.getSelectedItem());
-        String year        =String.valueOf(selectYear.getSelectedItem());
+        userData[0] = studentNum.getText();
+        userData[1] = String.valueOf(selectDegree.getSelectedItem());
+        userData[2] = String.valueOf(selectYear.getSelectedItem());
+        userData[3] = String.valueOf(onTrack.isSelected());
         
         String parameters = 
-            "&studentnum=" +studentNumber+
-            "&degree="    +degree+
-            "&ontrack="   +"true"+
-            "&yearscompleted=" +year;
+            "&studentnum=" +userData[0]+
+            "&degree="    +userData[1]+
+            "&yearscompleted=" +userData[2]+
+            "&ontrack="   +userData[3];
          // GET method
         
         try{
@@ -111,11 +112,12 @@ public class LoginGUI extends JPanel{
             new InputStreamReader(url.openStream()) );
 
             // responseText is the list of courses to populate the program tree with
-            responseText = in.readLine(); 
-            return responseText;
+            responseText = in.readLine();
+            userData[4] = responseText;
+            return userData;
         }catch(Exception ex){
-            responseText = "";
-            return responseText;
+            userData[4] = "";
+            return userData;
         }
 
     }
