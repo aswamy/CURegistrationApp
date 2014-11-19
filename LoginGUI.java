@@ -1,0 +1,123 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package sysc4505;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.net.*;
+import java.io.*;
+import java.util.Arrays;
+
+/**
+ *
+ * @author BenjaminW
+ */
+public class LoginGUI extends JPanel{
+
+    //Define my input fields
+    JTextField studentNum;
+    JCheckBox onTrack;
+    JComboBox  selectDegree,selectYear; 
+    String host = "localhost";
+    
+    //Constuctor for the loginGUI.
+    //This constructs a frame which will be packed with
+    //text fields for student number, login, password
+    public LoginGUI(String[] degrees, JPanel content,CardLayout cardLayout, String nextPanelName) {
+
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipadx = 200;
+        
+        /* first row*/
+        c.gridx=0;
+        c.gridy=0;
+        add(new JLabel("Student #:"), c);
+        studentNum = new JTextField();
+        c.gridx = 1;
+        c.gridy = 0;
+        add(studentNum, c);   
+        
+        /* second row*/
+        c.gridx=0;
+        c.gridy=1;
+        add(new JLabel("Degree:"), c);
+        //String[] degrees = {"CE", "CSE", "SE", "EE"}; //TODO get from server.
+        selectDegree = new JComboBox(degrees);
+        c.gridx = 1;
+        c.gridy = 1;
+        add(selectDegree, c);
+        
+        /*third row*/
+        c.gridx=0;
+        c.gridy=2;
+        add(new JLabel("OnTrack:"), c);
+        onTrack = new JCheckBox();
+        c.gridx = 1;
+        c.gridy = 2;
+        add(onTrack, c);
+        
+        /*fourth row*/
+        c.gridx=0;
+        c.gridy=3;
+        add(new JLabel("Year Completed:"), c);
+        String[] years = {"0", "1", "2", "3"};
+        selectYear = new JComboBox(years);
+        c.gridx = 1;
+        c.gridy = 3;
+        add(selectYear, c);
+        
+         /*4th row*/
+        c.gridx=0;
+        c.gridy=5;
+        c.gridwidth=2;
+        JButton button =new JButton("Done");
+        
+        //On button press, get the necessary info needed to make
+        //the program tree, and switch the cardGUI to the program tree
+        button.addActionListener((ActionEvent e) -> {
+            String responseText = sendUserInputs();
+            JPanel programPanel = new ProgramTreeGUI(responseText);
+            content.add(programPanel, nextPanelName);
+            cardLayout.show(content, nextPanelName);
+        });
+             
+        add(button, c);
+    };
+    
+    private String sendUserInputs(){
+        
+        String serverAddress = "http://" +host + "/view1b.php?viewType=JAVA";
+        String responseText;
+        String studentNumber = studentNum.getText();
+        String degree        =String.valueOf(selectDegree.getSelectedItem());
+        String year        =String.valueOf(selectYear.getSelectedItem());
+        
+        String parameters = 
+            "&studentnum=" +studentNumber+
+            "&degree="    +degree+
+            "&ontrack="   +"true"+
+            "&yearscompleted=" +year;
+         // GET method
+        
+        try{
+            URL url = new URL(serverAddress + parameters);
+
+            BufferedReader in = new BufferedReader(
+            new InputStreamReader(url.openStream()) );
+
+            // responseText is the list of courses to populate the program tree with
+            responseText = in.readLine(); 
+            return responseText;
+        }catch(Exception ex){
+            responseText = "";
+            return responseText;
+        }
+
+    }
+       
+}
