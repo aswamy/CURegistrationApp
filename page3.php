@@ -21,6 +21,7 @@
   			array_push($finishedCourseList, $key);
 		}
 	}
+
 	//$query  = explode('&', $_SERVER['QUERY_STRING']);
 	$degree = $_SESSION['degree'];
 	//$degree = "SE";
@@ -38,6 +39,7 @@
 	}
 
 	$courses_query = "SELECT p.*, o.course_prerequisite, o.course_has_lab FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' AND p.course_year = $year_status AND p.course_semester = 'fall' ORDER BY p.course_year, p.course_semester";
+	//echo $courses_query . "</br>";
 	$courses_query_rs = $conn->query($courses_query);
 	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 	$course_prereq_json = "{";
@@ -123,9 +125,10 @@
 	if ($conn->connect_error) {
 		trigger_error('Connection to database has failed');
 	}
-	$courses_query = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $year_status AND course_name IN $formattedValidCourses";
+	$courses_query = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $year_status AND course_name IN $formattedValidCourses AND course_semester = 'fall'";
 	//"SELECT r.*, o.course_has_lab FROM cu_running_courses r lEFT JOIN cu_offered_courses o ON r.course_name = o.course_name WHERE r.course_name IN $formattedValidCourses;"; 
 	$courses_query_rs = $conn->query($courses_query);
+	//echo $courses_query . "</br>";
 	if(!$courses_query_rs){
 		echo "invalid query";
 	}
@@ -174,14 +177,14 @@
 	//}
 	$selectedIndex = 0;
 
-	echo '<script src="js/test1.js"></script>';
+	echo '<script src="js/page3.js"></script>';
 	echo "<html>";
 	echo "	<body>";
 	echo "		<form>";
 	echo "			<div id='global'>";
 	echo "				<div id='timeTable' style='display:block;'>";
-	$timetable = new TimeTable($updatedSolutions[$selectedIndex]);
-	echo $timetable->displayHtml();
+	//$timetable = new TimeTable($updatedSolutions[$selectedIndex]);
+	//echo $timetable->displayHtml();
 	echo "				</div>";
 	echo "				<div id='solutions'>";
 	$sizeSolutions = sizeof($updatedSolutions);
@@ -201,6 +204,7 @@
 	echo "		</form>";
 	echo "	</body>";
 	echo "</html>";
+	echo "<script>myAjaxFunc(0);</script>";
 
 
 ?>
@@ -284,6 +288,22 @@
 			global $courseHasLabArr;
 			$hasLab = $courseHasLabArr[$course];
 
+			
+			if($course != "" && sizeof($newArr) == 0) {
+				$picked = $coursesPicked;
+				$left = $leftToTake;
+				$key = array_search($course, $left);
+				array_splice($left, $key, 1);
+				$empty = empty($left);
+				if($empty && !empty($picked)) {
+					//last course, so finish
+					$solutions = pickCourse("", array(), $picked, $coursesArr, "", $amountOfCourses, $solutions);
+				} else if(!$empty){
+					//not last course, keep looking for solutions
+					$solutions = pickCourse($left[0], $left, $picked, $coursesArr, "", $amountOfCourses, $solutions);
+				}
+			}
+
 			//iterate over list, selecting a course, then doing it again for the next
 			foreach ($newArr as $courses) {
 				$courseName = $courses['course_name'];
@@ -305,8 +325,9 @@
 					if(!$lab && $hasLab) {
 						//next course chosen should be the lab for the current course selected
 						$solutions = pickCourse($course, $leftToTake, $picked, $coursesArr, substr($section, 0, 1), $amountOfCourses+1, $solutions);
-						if(sizeof($solutions) > 200) {
-								break;
+						if(sizeof($solutions) > 5) {
+								return $solutions;
+								//break;
 							}
 						continue;
 					}
@@ -324,15 +345,17 @@
 						if(empty($left)) {
 							//this was the last course, therefore see if the solution works
 							$solutions = pickCourse("", array(), $picked, $coursesArr, "", $amountOfCourses, $solutions);
-							if(sizeof($solutions) > 200) {
-								break;
+							if(sizeof($solutions) > 5) {
+								return $solutions;
+								//break;
 							}
 							continue;
 						} else{
 							//try next course
 							$solutions = pickCourse($left[0], $left, $picked, $coursesArr, "", $amountOfCourses, $solutions); 
-							if(sizeof($solutions) > 200) {
-								break;
+							if(sizeof($solutions) > 5) {
+								return $solutions;
+								//break;
 							}
 							continue;
 						}
@@ -344,18 +367,20 @@
 					}
 				}
 			} //out of for loop, find solutions that don't include the current course (could be useful if the course has a conflict with another course)
-			$picked = $coursesPicked;
+			/*$picked = $coursesPicked;
 			$left = $leftToTake;
 			$key = array_search($course, $left);
 			array_splice($left, $key, 1);
 			$empty = empty($left);
-			if($empty && !empty($picked)) {
-				//last course, so finish
-				$solutions = pickCourse("", array(), $picked, $coursesArr, "", $amountOfCourses, $solutions);
-			} else if(!$empty){
-				//not last course, keep looking for solutions
-				$solutions = pickCourse($left[0], $left, $picked, $coursesArr, "", $amountOfCourses, $solutions);
-			}
+			if($course != "") {
+				if($empty && !empty($picked)) {
+					//last course, so finish
+					$solutions = pickCourse("", array(), $picked, $coursesArr, "", $amountOfCourses, $solutions);
+				} else if(!$empty){
+					//not last course, keep looking for solutions
+					$solutions = pickCourse($left[0], $left, $picked, $coursesArr, "", $amountOfCourses, $solutions);
+				}
+			}*/
 			// nothing left to do... end
 			return $solutions;
 		}

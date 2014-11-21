@@ -21,6 +21,13 @@
 	//	echo $course;
 	//}
 	echo $t1->displayHtml();
+	echo "</br>";
+	$selectedString = "(";
+	foreach($selected as $a) {
+		$selectedString = $selectedString . $a . ",";
+	}
+	$selectedString = rtrim($selectedString, ",") . ")";
+	echo "<input type='hidden' name='courses' value='$selectedString'/>";
 	
 
 ?>
