@@ -1,8 +1,8 @@
 <?php
 
 
-  require_once 'timeTableClass.php';
-  require_once 'database.php';
+  require_once 'classes/TimeTable.php';
+  require_once 'classes/Database.php';
 
 	
 	session_start();
@@ -34,7 +34,7 @@
     $inString = "(".$inString.")";
 
 
-	$db = new DatabaseClass();
+	$db = new Database();
 
 	$courses_array = $db->getPrereqs($degree, $year_status, 'fall');
 	$course_prereq_json = "{";
@@ -160,9 +160,10 @@
 	echo "				<div id='timeTable' style='display:block;'>";
 	echo "				</div>";
 	echo "				<div id='solutions'>";
+	
+	$solutionStr = "";
 	$sizeSolutions = sizeof($updatedSolutions);
 	for($i=0; $i != $sizeSolutions; $i++) {
-		$solutionStr = "";
 
 		foreach($updatedSolutions[$i] as $course) {
 			$solutionStr = $solutionStr . $course . ",";

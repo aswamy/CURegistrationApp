@@ -9,7 +9,7 @@
 		</div>
 		<span class='title'>Carleton University Registration App</span>
 	</div>
-	<div class='mainContainer'><form method='POST' action='testyearstatus.php'>
+	<div class='mainContainer'><form method='POST' action='view2.php'>
 		<input type="submit" value="Done"/><br><br>
 		<table style='margin: 0 auto'>
 			<tr class='courseRow'>

@@ -1,7 +1,7 @@
 <?php
 
 
-	class Database {
+	class DataBase {
 
 		function __construct(){
 			$host="localhost";

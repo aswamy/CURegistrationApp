@@ -1,5 +1,5 @@
 <?php
-	require_once 'timeTableClass.php';
+	require_once 'classes/TimeTable.php';
 	session_start();
 	$selected = array();
 	foreach($_GET as $key => $val) {
