@@ -19,13 +19,13 @@ function myAjaxFunc(increment) {
 		index = length-1;
 	}
 	var b = solutions[index].innerHTML.split(',');
-	b.pop();//temporary
+	//b.pop();//temporary
 	scheduleText = "";
 	for(var a in b) {
 		getRequest += b[a] + "=on&";
 		scheduleText += b[a] + ", ";
 	}
-	scheduleText = scheduleText.substring(0,scheduleText.length-1);
+	scheduleText = scheduleText.replace(/,\s+$/,'');;
 	updateScheduleText();
 	getRequest = getRequest.substring(0, getRequest.length - 1);
 	request.open("GET", getRequest, true);

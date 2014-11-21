@@ -158,8 +158,6 @@
 	echo "		<form method='POST' action='page4.php' style='overflow:auto;' >";
 	echo "			<div id='global' style='overflow:auto;'>";
 	echo "				<div id='timeTable' style='display:block;'>";
-	//$timetable = new TimeTable($updatedSolutions[$selectedIndex]);
-	//echo $timetable->displayHtml();
 	echo "				</div>";
 	echo "				<div id='solutions'>";
 	$sizeSolutions = sizeof($updatedSolutions);
@@ -169,6 +167,7 @@
 		foreach($updatedSolutions[$i] as $course) {
 			$solutionStr = $solutionStr . $course . ",";
 		}
+		$solutionStr = rtrim($solutionStr, ",");
 		echo "					<div style='display:none;'>" .  $solutionStr . "</div>";
 		
 	}
