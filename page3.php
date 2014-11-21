@@ -155,8 +155,8 @@
 	echo '<script src="js/page3.js"></script>';
 	echo "<html>";
 	echo "	<body>";
-	echo "		<form>";
-	echo "			<div id='global'>";
+	echo "		<form method='POST' action='page4.php' style='overflow:auto;' >";
+	echo "			<div id='global' style='overflow:auto;'>";
 	echo "				<div id='timeTable' style='display:block;'>";
 	//$timetable = new TimeTable($updatedSolutions[$selectedIndex]);
 	//echo $timetable->displayHtml();
@@ -173,9 +173,14 @@
 		
 	}
 	echo "				</div>";
-	echo "				<button type='button' onclick='myAjaxFunc(-1)'>previous</button>";
-	echo "				<button type='button' onclick='myAjaxFunc(1)'>next</button>";
 	echo "			</div>";
+	echo "</br>";
+	echo "			<div id='courseList'>";
+	echo "				<p>Courses in schedule: $solutionStr</p>
+					</div></br>";
+	echo "			<button type='button' onclick='myAjaxFunc(-1)'>previous</button>";
+	echo "			<button type='button' onclick='myAjaxFunc(1)'>next</button>";
+	echo " 			<input type='submit' value='Register'/>";
 	echo "		</form>";
 	echo "	</body>";
 	echo "</html>";
