@@ -2,6 +2,7 @@
 
 
   require_once 'timeTableClass.php';
+  require_once 'DatabaseQueries.php';
 
 	
 	session_start();
@@ -33,15 +34,9 @@
     $inString = "(".$inString.")";
 
 
-	$conn = new mysqli('localhost', 'root', '', 'sysc4504');
-	if ($conn->connect_error) {
-		trigger_error('Connection to database has failed');
-	}
+	$db = new DatabaseClass("sysc4504");
 
-	$courses_query = "SELECT p.*, o.course_prerequisite, o.course_has_lab FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' AND p.course_year = $year_status AND p.course_semester = 'fall' ORDER BY p.course_year, p.course_semester";
-	//echo $courses_query . "</br>";
-	$courses_query_rs = $conn->query($courses_query);
-	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
+	$courses_array = $db->getPrereqs($degree, $year_status, 'fall');
 	$course_prereq_json = "{";
 
 	
@@ -120,19 +115,7 @@
 	}
 	$formattedValidCourses = rtrim($formattedValidCourses, ",") . ")";
 
-
-	$conn = new mysqli('localhost', 'root', '', 'sysc4504');
-	if ($conn->connect_error) {
-		trigger_error('Connection to database has failed');
-	}
-	$courses_query = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $year_status AND course_name IN $formattedValidCourses AND course_semester = 'fall'";
-	//"SELECT r.*, o.course_has_lab FROM cu_running_courses r lEFT JOIN cu_offered_courses o ON r.course_name = o.course_name WHERE r.course_name IN $formattedValidCourses;"; 
-	$courses_query_rs = $conn->query($courses_query);
-	//echo $courses_query . "</br>";
-	if(!$courses_query_rs){
-		echo "invalid query";
-	}
-	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
+	$courses_array = $db->getNameInCourses($degree, $year_status, $formattedValidCourses, 'fall');
 	$coursesToTake = array();
 	$formattedCoursesToTake = "(";
 	foreach($courses_array as $course) {
@@ -143,18 +126,10 @@
 		
 	}
 	$formattedCoursesToTake = rtrim($formattedCoursesToTake, ",") . ")";
-	
 
-	$query = "SELECT course_name, course_section FROM cu_running_courses WHERE course_name IN $formattedCoursesToTake AND (seats_left > 0 OR seats_left = -1) AND course_semester = 'fall'";
-	$courses_query_rs = $conn->query($query);
-	if(!$courses_query_rs){
-		echo "invalid query";
-	}
-	$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
-	//echo $query . "</br>";
-	//echo "picking courses now... sizeof... " . sizeof($coursesToTake) . 'size of queryarr: ' . sizeof($courses_array) .  "</br>";
+	
+	$courses_array = $db->getNameSectionPairs($formattedCoursesToTake, 'fall');
 	$t1 = pickCourses($coursesToTake[0], $coursesToTake, array(), $courses_array);
-	//echo "done...</br>";
 	$maxLength = 0;
 	foreach($t1 as $solution) {
 		if(sizeof($solution) > $maxLength) {
