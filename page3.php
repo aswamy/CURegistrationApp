@@ -2,7 +2,7 @@
 
 
   require_once 'timeTableClass.php';
-  require_once 'DatabaseQueries.php';
+  require_once 'database.php';
 
 	
 	session_start();

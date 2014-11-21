@@ -14,7 +14,7 @@
 		}
 
 		function execute($sql){
-			//echo $sql."</br>";
+			echo $sql."</br>";
 			$courses_query_rs = $this->connection->query($sql);
 			return $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 		}
