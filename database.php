@@ -3,14 +3,12 @@
 
 	class DataBaseClass {
 
-		function __construct($db){
+		function __construct(){
 			$host="localhost";
 			$user="root";
 			$password="";
-			if($db!="")
-				$this->connection = mysqli_connect($host, $user, $password, $db);
-			else
-				$this->connection = mysqli_connect($host, $user, $password);
+			$db="sysc4504"
+			$this->connection = mysqli_connect($host, $user, $password, $db);
 		}
 
 		function execute($sql){
