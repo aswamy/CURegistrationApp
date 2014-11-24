@@ -3,18 +3,26 @@
 
 	class DataBase {
 
-		function __construct(){
+		function __construct($db){
 			$host="localhost";
 			$user="root";
 			$password="";
-			$db="sysc4504";
-			$this->connection = mysqli_connect($host, $user, $password, $db);
+			if($db!=""){
+				$this->connection = mysqli_connect($host, $user, $password, $db);
+				}
+			else{
+				$this->connection = mysqli_connect($host, $user, $password);
+				}
 		}
 
 		function execute($sql){
 			echo $sql."</br>";
 			$courses_query_rs = $this->connection->query($sql);
 			return $courses_query_rs->fetch_all(MYSQLI_ASSOC);
+		}
+		
+		function create($db){
+			$this->connection->query("CREATE DATABASE IF NOT EXISTS $db");
 		}
 		
 		function getError(){
@@ -34,6 +42,29 @@
 		function getNameSectionPairs($inCourses, $term) {
 			$sql = "SELECT course_name, course_section FROM cu_running_courses WHERE course_name IN $inCourses AND (seats_left > 0 OR seats_left = -1) AND course_semester = '$term'";
 			return $this->execute($sql);
+		}
+		
+		function import($pathToFile){
+			$lines = file($pathToFile);
+			$buff = '';
+			
+			//Since we don't have access to an SQL parser this function parses SQL
+			foreach($lines as $line) {
+				//Lines that start with -- are comments. Ignore them
+				//Also ignore empty lines
+				if ($line == '' || substr($line,0,2) == '--')
+					continue;
+				// If we get actual content, add it to the buffer
+				$buff .= $line;
+				//Lines that end with a semicolon need to be executed.
+				if (substr(trim($line), -1, 1) == ';')
+				{
+					$this->connection->query($buff);
+					// Reset the buffer now that we executed a thing
+					$buff = '';
+				}
+			}
+			
 		}
 
 	}

@@ -34,7 +34,7 @@
     $inString = "(".$inString.")";
 
 
-	$db = new Database();
+	$db = new Database("sysc4504");
 
 	$courses_array = $db->getPrereqs($degree, $year_status, 'fall');
 	$course_prereq_json = "{";
