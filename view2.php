@@ -27,7 +27,7 @@
 	$degree = $_SESSION['degree'];
 	//$degree = "SE";
 	//$year_status = 1;
-	$year_status = $_SESSION['years_completed'] + 1;
+	$year_status = $_SESSION['registering_year'];
 	$params = array();
 
     $inString = rtrim($courselist, ",");

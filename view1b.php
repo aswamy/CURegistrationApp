@@ -4,8 +4,9 @@ session_start();
 
 $_SESSION['student_num'] = (isset($_GET['studentnum']) ? $_GET['studentnum'] : null);
 $_SESSION['degree'] = (isset($_GET['degree']) ? $_GET['degree'] : null);
-$_SESSION['on_track'] = (isset($_GET['ontrack']) ? $_GET['ontrack'] : null);
-$_SESSION['years_completed'] = (isset($_GET['yearscompleted']) ? $_GET['yearscompleted'] : 0);
+$_SESSION['on_track'] = (isset($_GET['ontrack']) ? $_GET['ontrack'] : 'false');
+$_SESSION['registering_year'] = (isset($_GET['registeringyear']) ? $_GET['registeringyear'] : 1);
+$_SESSION['registering_semester'] = (isset($_GET['registeringsemester']) ? $_GET['registeringsemester'] : 'fall');
 
 $conn = new mysqli('localhost', 'root', '', 'sysc4504');
 if ($conn->connect_error) {

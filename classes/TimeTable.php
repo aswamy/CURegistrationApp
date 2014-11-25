@@ -1,6 +1,7 @@
 <?php
 
-	require_once 'TimeSlot.php';
+	require_once('TimeSlot.php');
+	
 	class TimeTable {
 
 		private $courseList = array();

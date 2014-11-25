@@ -20,6 +20,10 @@
 			$courses_query_rs = $this->connection->query($sql);
 			return $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 		}
+
+		function update($sql){
+			return $this->connection->query($sql);
+		}
 		
 		function create($db){
 			$this->connection->query("CREATE DATABASE IF NOT EXISTS $db");

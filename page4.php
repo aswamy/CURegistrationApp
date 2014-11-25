@@ -15,16 +15,14 @@ foreach($subject as $sub){
 	$temp = explode("-",$sub);
 	$course = $temp[0];
 	$section = $temp[1];
-	echo $course;
+	echo "$course $section";
 	echo "<br/>";
 	$sql = "UPDATE `cu_running_courses`
 			SET `seats_left` = `seats_left` -1
 			WHERE `seats_left` > 0 AND `course_name`='$course' AND `course_section`='$section'
 			;";
 			
-	//TODO fix bug with execute not handling update queries.
-	$db->execute($sql);
-	
+	$db->update($sql);
 }
 
 ?>

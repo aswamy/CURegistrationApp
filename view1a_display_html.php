@@ -39,19 +39,25 @@
 		<tr>
 		<td>On Track:</td>
 		<td>
-			<input class="inputField" onchange="isOnTrack(this)" checked type="radio" name="ontrack" id="ontrack" value="true">Yes</input><input onchange="isOnTrack(this)" type="radio" name="ontrack" value="false">No</input>
+			<input class="inputField" checked type="radio" name="ontrack" id="ontrack" value="true">Yes</input><input type="radio" name="ontrack" value="false">No</input>
 		</td>
 		</tr>
-		<!-- If the student is on track, let him/her choose, what year he/she is in-->
+		<!-- what year he/she is in-->
 		<tr>
-		<td>Years Completed:</td>
+		<td>Registering Year:</td>
 		<td>
-			<select class="inputField" name="yearscompleted" id="yearscompleted"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+			<select class="inputField" name="registeringyear" id="registeringyear"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
 		</td>
 		</tr>
+		<!-- what semester he/she is in-->
+		<tr>
+		<td>Registering Semester:</td>
+		<td>
+			<input class="inputField" checked type="radio" name="registeringsemester" id="registeringsemester" value="fall">Fall</input><input type="radio" name="registeringsemester" value="winter">Winter</input>
+		</td>
+		</tr>		
 		</table>
 		<input type="submit" value="Done"/>
 	</form>
 </div>
-<script src="js/splash.js"></script>
 </body>

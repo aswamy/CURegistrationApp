@@ -38,7 +38,7 @@
 					$course_current_year = $course['course_year'];
 					$course_current_semester = $course['course_semester'];
 
-					if($course_current_year > $_SESSION['years_completed']) $course_completed = '';
+					if($course_current_year >= $_SESSION['registering_year'] || $_SESSION['on_track'] == 'false') $course_completed = '';
 					echo "<td class='courseAlignment'><div class='courseTitle'>Year $course_current_year, $course_current_semester</div>";
 				}
 
