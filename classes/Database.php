@@ -39,7 +39,7 @@
 		}
 
 		function getNameInCourses($degree, $year_status, $inCourses, $term) {
-			$sql = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $year_status AND course_name IN $inCourses AND course_semester = '$term'";
+			$sql = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $year_status AND course_name IN $inCourses AND course_semester = '$term' ORDER BY course_name DESC";
 			return $this->execute($sql);
 		}
 
