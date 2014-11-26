@@ -305,7 +305,7 @@
 					if(!$lab && $hasLab) {
 						//next course chosen should be the lab for the current course selected
 						$solutions = pickCourse($course, $leftToTake, $picked, $coursesArr, substr($section, 0, 1), $amountOfCourses+1, $solutions);
-						if(sizeof($solutions) > 5) {
+						if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}
@@ -325,7 +325,7 @@
 						if(empty($left)) {
 							//this was the last course, therefore see if the solution works
 							$solutions = pickCourse("", array(), $picked, $coursesArr, "", $amountOfCourses, $solutions);
-							if(sizeof($solutions) > 5) {
+							if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}
@@ -333,7 +333,7 @@
 						} else{
 							//try next course
 							$solutions = pickCourse($left[0], $left, $picked, $coursesArr, "", $amountOfCourses, $solutions); 
-							if(sizeof($solutions) > 5) {
+							if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}
