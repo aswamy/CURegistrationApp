@@ -13,25 +13,31 @@
 
 	$selectedCourses = array();
 
-	$courselist = "";
+	//$courselist = "";
 	$finishedCourseList = array();
-	$validCourses = array();
+	//$validCourses = array();
+	$coursesToTake = array();
 	foreach($_POST as $key => $val) {
 		if(preg_match("/[A-Z]{4}[0-9]{4}/", "$key", $matches)) {
-			$courselist = $courselist . "'" . $key . "',";
-  			array_push($finishedCourseList, $key);
+			//$courselist = $courselist . "'" . $key . "',";
+  			array_push($coursesToTake, $key);
 		}
 	}
+
+	$finishedCourseString = $_SESSION['finishedCourses'];
+	$finishedCourseList = explode(",",$finishedCourseString);
+
+	
 
 	//$query  = explode('&', $_SERVER['QUERY_STRING']);
 	$degree = $_SESSION['degree'];
 	//$degree = "SE";
 	//$year_status = 1;
 	$year_status = $_SESSION['registering_year'];
-	$params = array();
+	//$params = array();
 
-    $inString = rtrim($courselist, ",");
-    $inString = "(".$inString.")";
+    //$inString = rtrim($courselist, ",");
+    //$inString = "(".$inString.")";
 
 
 	$db = new Database("sysc4504");
@@ -57,7 +63,7 @@
 
 	//get list of valid courses based on finished courses
 	$jsonArr = json_decode($course_prereq_json);
-
+/*
 	foreach($jsonArr as $obj => $val){
 
 
@@ -108,27 +114,34 @@
 		
 
 	}
-
-	$formattedValidCourses = "(";
-	foreach ($validCourses as $val) {
+*/
+	
+	/*$formattedValidCourses = "(";
+	foreach ($coursesToTake as $val) {
 		$formattedValidCourses = $formattedValidCourses . "'" . $val . "',";
 	}
 	$formattedValidCourses = rtrim($formattedValidCourses, ",") . ")";
 
 	$courses_array = $db->getNameInCourses($degree, $year_status, $formattedValidCourses, 'fall');
 	$coursesToTake = array();
+	*/
 	$formattedCoursesToTake = "(";
-	foreach($courses_array as $course) {
-		if(!strpos($course['course_name'], "ELECT")) {
-			$formattedCoursesToTake = $formattedCoursesToTake . "'" . $course['course_name'] . "',";
-		}
-		array_push($coursesToTake, $course['course_name']);
+	
+	foreach($coursesToTake as $course) {
+		//if(!strpos($course['course_name'], "ELECT")) {
+			echo $course;
+			$formattedCoursesToTake = $formattedCoursesToTake . "'" . $course . "',";
+		//}
+		//array_push($coursesToTake, $course['course_name']);
 		
 	}
 	$formattedCoursesToTake = rtrim($formattedCoursesToTake, ",") . ")";
 
 	
+	//$courses_array = $db->getNameSectionPairs($formattedCoursesToTake, 'fall');
+	
 	$courses_array = $db->getNameSectionPairs($formattedCoursesToTake, 'fall');
+	
 	$t1 = pickCourses($coursesToTake[0], $coursesToTake, array(), $courses_array);
 	$maxLength = 0;
 	foreach($t1 as $solution) {
@@ -144,6 +157,7 @@
 			array_push($updatedSolutions, $solution);
 		}
 	}
+
 	//foreach($updatedSolutions as $solution){
 	//	foreach($solution as $course) {
 	//		echo '"'.$course.'",';
@@ -161,7 +175,7 @@
 	echo "				</div>";
 	echo "				<div id='solutions'>";
 	
-	
+	$solutionStr = "";
 	$sizeSolutions = sizeof($updatedSolutions);
 	for($i=0; $i != $sizeSolutions; $i++) {
 		$solutionStr = "";
