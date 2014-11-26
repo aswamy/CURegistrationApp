@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sysc4505;
+package sysc4504;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -69,9 +69,11 @@ public class CardGUI extends JFrame {
      */
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
-        //creating     and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            createAndShowGUI();
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
         });
-    }
+    }  
 }

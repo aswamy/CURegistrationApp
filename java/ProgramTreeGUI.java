@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sysc4505;
+package sysc4504;
 import java.awt.*;
 import javax.swing.*;
 import java.util.Arrays;

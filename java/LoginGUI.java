@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sysc4505;
+package sysc4504;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class LoginGUI extends JPanel{
     //Constuctor for the loginGUI.
     //This constructs a frame which will be packed with
     //text fields for student number, login, password
-    public LoginGUI(String[] degrees, JPanel content,CardLayout cardLayout, String nextPanelName) {
+    public LoginGUI(String[] degrees, final JPanel content,final CardLayout cardLayout, final String nextPanelName) {
 
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -78,12 +78,22 @@ public class LoginGUI extends JPanel{
         
         //On button press, get the necessary info needed to make
         //the program tree, and switch the cardGUI to the program tree
-        button.addActionListener((ActionEvent e) -> {
-            String[] userData = sendUserInputs();
-            JPanel programPanel = new ProgramTreeGUI(userData);
-            content.add(programPanel, nextPanelName);
-            cardLayout.show(content, nextPanelName);
-        });
+//        button.addActionListener((ActionEvent e) -> {
+//            String[] userData = sendUserInputs();
+//            JPanel programPanel = new ProgramTreeGUI(userData);
+//            content.add(programPanel, nextPanelName);
+//            cardLayout.show(content, nextPanelName);
+//        });
+        button.addActionListener( new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		String[] userData = sendUserInputs();
+        		JPanel programPanel = new ProgramTreeGUI(userData);
+        		content.add(programPanel, nextPanelName);
+        		cardLayout.show(content, nextPanelName);	
+        	}
+        	
+        	}
+        );
              
         add(button, c);
     };
