@@ -161,10 +161,10 @@
 	echo "				</div>";
 	echo "				<div id='solutions'>";
 	
-	$solutionStr = "";
+	
 	$sizeSolutions = sizeof($updatedSolutions);
 	for($i=0; $i != $sizeSolutions; $i++) {
-
+		$solutionStr = "";
 		foreach($updatedSolutions[$i] as $course) {
 			$solutionStr = $solutionStr . $course . ",";
 		}
