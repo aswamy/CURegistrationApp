@@ -25,7 +25,7 @@ function myAjaxFunc(increment) {
 		getRequest += b[a] + "=on&";
 		scheduleText += b[a] + ", ";
 	}
-	scheduleText = scheduleText.replace(/,\s+$/,'');;
+	scheduleText = scheduleText.replace(/,\s+$/,'');
 	updateScheduleText();
 	getRequest = getRequest.substring(0, getRequest.length - 1);
 	request.open("GET", getRequest, true);
