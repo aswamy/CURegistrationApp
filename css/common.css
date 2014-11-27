@@ -6,6 +6,12 @@
 	padding-left : 5px;
 }
 
+.subMessage {
+	color: rgb(200,200,200);
+	font-style : italic;
+	padding-bottom: 5px;
+}
+
 .title {
 	color: white;
 	line-height: 100%;

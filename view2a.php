@@ -1,5 +1,6 @@
 <?php
 	require_once 'classes/Database.php';
+
 	session_start();
 	$finishedCourseList = array();
 	$validCourses = array();
@@ -101,12 +102,7 @@
 		<link rel="stylesheet" type="text/css" href="css/common.css" />
 	</head>
 	<body style="background-color: gray">
-		<div class='titleContainer'>
-			<div>
-				<img class='titleImage' src='img/logo-cu-shield-outlined.svg' />
-			</div>
-			<span class='title'>Carleton University Registration App</span>
-		</div>
+	<?php include 'header.html';?>
 		<div class="mainMessage">
 			* Select which courses to take this semester:
 		</div>
@@ -114,6 +110,7 @@
 
 			<div id="courseSelection">
 				<?php
+					echo "<div class='subMessage'>Courses you can take in <strong>year $_SESSION[registering_year], $_SESSION[registering_semester]</strong> based on completed courses:</div>";
 					foreach($validCourses as $course) {
 						echo "<input type='checkbox' name='$course' value=on/>$course</br>";
 					}

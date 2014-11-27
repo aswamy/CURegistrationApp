@@ -37,6 +37,11 @@
 			return $this->execute($sql);
 		}
 
+		function getDegreeCourses($degree) {
+			$sql = "SELECT * FROM cu_program_progression WHERE degree_name='$degree' ORDER BY course_year, course_semester";
+			return $this->execute($sql);
+		}
+
 		function getNameInCourses($degree, $course_year, $inCourses, $term) {
 			$sql = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $course_year AND course_name IN $inCourses AND course_semester = '$term' ORDER BY course_name DESC";
 			return $this->execute($sql);

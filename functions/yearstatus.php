@@ -1,5 +1,7 @@
 <?php
 
+	require_once 'classes/Database.php';
+
 /**
 * Meant to calc year status (**Not to be confused with year completed**)
 * Year completed = all credits offered that year is complete
@@ -23,8 +25,9 @@ function getYearStatus($courses_completed, $degree) {
 	$totalCredits[2] = 0.0;
 	$totalCredits[3] = 0.0;
 
-	$conn = new mysqli('localhost', 'root', '', 'sysc4504');
-	$result = $conn->query("SELECT * FROM cu_program_progression WHERE degree_name='$degree' ORDER BY course_year, course_semester");
+
+	$db = new Database("sysc4504");
+	$result = $db->getDegreeCourses($degree);
 
 	while ($row = $result->fetch_assoc()) {
 		if($row['course_year_status_weight'] == 1) {
