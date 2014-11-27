@@ -16,7 +16,6 @@
 		}
 
 		function execute($sql){
-			echo $sql."</br>";
 			$courses_query_rs = $this->connection->query($sql);
 			return $courses_query_rs->fetch_all(MYSQLI_ASSOC);
 		}
@@ -33,13 +32,13 @@
 			return mysqli_error($this->connection);
 		}
 
-		function getPrereqs($degree, $year_status, $term) {
-			$sql = "SELECT p.*, o.course_prerequisite, o.course_has_lab FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' AND p.course_year = $year_status AND p.course_semester = '$term' ORDER BY p.course_name DESC";
+		function getPrereqs($degree, $course_year, $term) {
+			$sql = "SELECT p.*, o.course_prerequisite, o.course_has_lab FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' AND p.course_year = $course_year AND p.course_semester = '$term' ORDER BY p.course_name DESC";
 			return $this->execute($sql);
 		}
 
-		function getNameInCourses($degree, $year_status, $inCourses, $term) {
-			$sql = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $year_status AND course_name IN $inCourses AND course_semester = '$term' ORDER BY course_name DESC";
+		function getNameInCourses($degree, $course_year, $inCourses, $term) {
+			$sql = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $course_year AND course_name IN $inCourses AND course_semester = '$term' ORDER BY course_name DESC";
 			return $this->execute($sql);
 		}
 

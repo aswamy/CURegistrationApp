@@ -9,8 +9,10 @@
 		</div>
 		<span class='title'>Carleton University Registration App</span>
 	</div>
+	<div class="mainMessage">
+		* Select completed courses:
+	</div>
 	<div class='mainContainer'><form method='POST' action='view2a.php'>
-		<input type="submit" value="Done"/><br><br>
 		<table style='margin: 0 auto'>
 			<tr class='courseRow'>
 
@@ -57,8 +59,8 @@
 			?>
 			</tr>
 		</table>
-		<br><input type="submit" value="Done"/></form>
-	</form></div>
+		<br><input type="submit" value="Submit"/></form>
+	</div>
 	<p>Prerequisite: <span id="displayPreq"></span></p>
 </body>	
 <script>

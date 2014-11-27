@@ -95,25 +95,31 @@
 		
 
 	}
-
-
-
-
 ?>
 
-<html>
-	<body>
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/common.css" />
+	</head>
+	<body style="background-color: gray">
+		<div class='titleContainer'>
+			<div>
+				<img class='titleImage' src='img/logo-cu-shield-outlined.svg' />
+			</div>
+			<span class='title'>Carleton University Registration App</span>
+		</div>
+		<div class="mainMessage">
+			* Select which courses to take this semester:
+		</div>
 		<form method="POST" action='view2.php'>
 
 			<div id="courseSelection">
-
 				<?php
 					foreach($validCourses as $course) {
 						echo "<input type='checkbox' name='$course' value=on/>$course</br>";
 					}
 				?>
-				<input type="submit" value="submit"/>
-
+				<br >
+				<input type="submit" value="Submit"/>
 			</div>
 
 		</form>
