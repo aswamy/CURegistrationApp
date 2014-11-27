@@ -18,13 +18,14 @@
 	$_SESSION['finishedCourses'] = $finishedCourseString;
 	$degree = $_SESSION['degree'];
 	$year_status = $_SESSION['registering_year'];
+	$term = $_SESSION['registering_semester'];
 	$params = array();
 
 
 
 	$db = new Database("sysc4504");
 
-	$courses_array = $db->getPrereqs($degree, $year_status, 'fall');
+	$courses_array = $db->getPrereqs($degree, $year_status, $term);
 	$course_prereq_json = "{";
 
 	
