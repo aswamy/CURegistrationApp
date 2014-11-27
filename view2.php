@@ -26,9 +26,6 @@
 
 	$finishedCourseString = $_SESSION['finishedCourses'];
 	$finishedCourseList = explode(",",$finishedCourseString);
-
-	
-
 	//$query  = explode('&', $_SERVER['QUERY_STRING']);
 	$degree = $_SESSION['degree'];
 	//$degree = "SE";
@@ -129,7 +126,6 @@
 	
 	foreach($coursesToTake as $course) {
 		//if(!strpos($course['course_name'], "ELECT")) {
-			echo $course;
 			$formattedCoursesToTake = $formattedCoursesToTake . "'" . $course . "',";
 		//}
 		//array_push($coursesToTake, $course['course_name']);
@@ -141,7 +137,6 @@
 	//$courses_array = $db->getNameSectionPairs($formattedCoursesToTake, 'fall');
 	
 	$courses_array = $db->getNameSectionPairs($formattedCoursesToTake, 'fall');
-	
 	$t1 = pickCourses($coursesToTake[0], $coursesToTake, array(), $courses_array);
 	$maxLength = 0;
 	foreach($t1 as $solution) {
@@ -235,6 +230,7 @@
 			
 			//check to make sure all picked courses meet there prerequisites
 			if($hasReq){ 
+				//echo "has prereqs</br>";
 				$timeTable = new TimeTable($coursesPicked);
 				$timeTable->generateTimeTable();
 
@@ -245,7 +241,9 @@
 					}
 					array_push($solutions, $timeTable->courseList);
 				}
-			} 
+			} else {
+				//echo "missing concurrent prereqs</br>";
+			}
 			return $solutions;
 		} else {
 			//build array of options for the current course/lab
@@ -415,7 +413,10 @@
 		  								$orPrereq = TRUE;
 		  								break;
 		  							}
-		  							else if(hasConcurrentCourse($trueName->name,$chosen) or $obj == "SYSC4937"){ //added to allow 4th year project to be selected in fall
+		  							else if(hasConcurrentCourse($trueName->name,$chosen)){ //added to allow 4th year project to be selected in fall
+		  								$orPrereq = TRUE;
+		  								break;
+		  							} else if(in_array($trueName->name, $finished)) {
 		  								$orPrereq = TRUE;
 		  								break;
 		  							}
