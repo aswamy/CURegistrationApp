@@ -5,6 +5,11 @@
  */
 package sysc4504;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import javax.swing.*;
 import java.util.Arrays;
 import javax.swing.border.Border;
@@ -15,20 +20,49 @@ import javax.swing.border.Border;
  */
 public class ProgramTreeGUI extends JPanel {
     
-    
-       //Given an array that contains: Degree, Student#,Years Done, On Track and
-       // a CSV list of courses, create a program tree
-       public ProgramTreeGUI(String[] programData) {
-
-        Border borderF = BorderFactory.createLineBorder(Color.BLACK, 1);
-        Border borderW = BorderFactory.createLineBorder(Color.GRAY, 1);
+        //Define an array list to hold the selected courses
+        //because array lists are dynamically sized
+        private ArrayList<String> selectedCourses = new ArrayList<String>();
+        private static final String RESULT_PANEL = "Result Panel";
+       /* Constructor for the program tree.
+        * Given an array that contains: Degree,Student#,Years Done, On Track and
+        * a CSV list of courses, creates a program tree
+        * @param programData The array of degree,student#,years done, on track status
+        * and CSV list of program courses.
+        */
+       public ProgramTreeGUI(String[] programData, final JPanel content,final CardLayout cardLayout, final String nextPanelName) {
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+        int tableLength = buildProgramTree(programData, c);
+        JButton button =new JButton("Done");
+        
+        //On button press, get the necessary info needed to make
+        //the program tree, and switch the cardGUI to the program tree
+        button.addActionListener( new ActionListener() {
+                @Override
+        	public void actionPerformed(ActionEvent e) {
+        		JPanel resultPanel = new ResultGUI(selectedCourses);
+        		content.add(resultPanel, RESULT_PANEL);
+        		cardLayout.show(content, RESULT_PANEL);	
+        	}
+        	
+        	}
+        );
+        c.gridx=0;
+        c.gridy=tableLength+1;
+        add(button, c);
+       };
+       
+
+       /* Create a program tree from CSV data. Return a
+       *
+       */
+       private int buildProgramTree(String[] programData, GridBagConstraints c) {
+        Border borderF = BorderFactory.createLineBorder(Color.BLACK, 1);
+        Border borderW = BorderFactory.createLineBorder(Color.GRAY, 1);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipadx = 50;
         c.ipady = 20;
-        
-
         String[] csvRows = programData[4].split(";");
         //The first row of the CSV is the column names
         //course_name,course_year,course_semester,course_size;
@@ -58,7 +92,8 @@ public class ProgramTreeGUI extends JPanel {
         */
         String prevSemester = "winter";
         int col =-1; //int to hold the column count
-        int row =2; //Start at row 2 to leave room for column titles
+        int row =2; //Start at row 2 to leave room for column title and table title
+        int highestRowLenSoFar = 2;
         int yearsCompleted = Integer.parseInt(programData[2]);
         boolean ontrack = Boolean.parseBoolean(programData[3]);
         for (String csvRow : _csvRows) {
@@ -69,9 +104,8 @@ public class ProgramTreeGUI extends JPanel {
 
             //Changing semesters means moving to the next column
             if(!courseSemester.equals(prevSemester)){
-//                System.out.println("Semester has changed");
                 col++;
-                row=2;
+                row=2; //Start at 2 to leave room for column titles + table title
                 c.gridx=col;
                 c.gridy=row-1;
                 JLabel semesterTitle = new JLabel(course[course_semester] +","+course[course_year]);
@@ -81,37 +115,44 @@ public class ProgramTreeGUI extends JPanel {
                 add(semesterTitle, c);
                 prevSemester = courseSemester;
             }
-
+            
+            if(row > highestRowLenSoFar){
+                highestRowLenSoFar=row;
+            }
             c.gridx=col;
             c.gridy=row;
-            JLabel courseName = new JLabel(course[course_name]);
             Border border = course[course_semester].equals("fall") ? borderF : borderW;
-            courseName.setBorder(border);
-            add(courseName, c);
-            c.gridy=row+1;
-            JCheckBox checkbox = new JCheckBox();
+            JCheckBox checkbox = new JCheckBox(course[course_name]);
             if((courseYear <= yearsCompleted) && ontrack) {
             	checkbox.setEnabled(false);
             	checkbox.setSelected(true);
+                selectedCourses.add(course[course_name]);
             }
+            ItemListener listen = new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
+                        selectedCourses.add(course[course_name]);
+                    } else {
+                        selectedCourses.remove(course[course_name]);
+                    }
+                }};
+            checkbox.addItemListener(listen);
             checkbox.setBorder(border);
             checkbox.setBorderPainted(true);
             add(checkbox, c);
-            row=row+2;
-                    
+            row=row+1;        
         }
         //AFTER making the table we add a title.
         //We do this because we don't know how long the gridwidth should be beforehand.
+        c.gridwidth=col+1;
         c.gridx=0;
         c.gridy=0;
-        c.gridwidth=col+1;
         JLabel title = new JLabel(programData[1]+ " : " + programData[0] + " ONTRACK:"+programData[3], JLabel.CENTER);
         title.setFont(new Font("Serif", Font.BOLD, 32));
         add(title, c);
-        c.gridwidth=0;
-  
-       };
-
+        return highestRowLenSoFar;
+       }
        
 }
 

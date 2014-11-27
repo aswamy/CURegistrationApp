@@ -13,6 +13,7 @@ import java.io.*;
 /**
  *
  * @author BenjaminW
+ *
  */
 public class LoginGUI extends JPanel{
 
@@ -22,9 +23,14 @@ public class LoginGUI extends JPanel{
     JComboBox  selectDegree,selectYear; 
     String host = "localhost";
     
-    //Constuctor for the loginGUI.
-    //This constructs a frame which will be packed with
-    //text fields for student number, login, password
+    /* Constuctor for the loginGUI.
+    *  This constructs a frame which will be packed with
+    *  text fields for student number, login, password
+    *  @param degrees The list of degrees to populate the drop down list
+    *  @param content The content pane
+    *  @param cardLayout The cardlayout 
+    *  @param nextPanelName The name of the next panel to travel to on successful login
+    */
     public LoginGUI(String[] degrees, final JPanel content,final CardLayout cardLayout, final String nextPanelName) {
 
         setLayout(new GridBagLayout());
@@ -56,6 +62,7 @@ public class LoginGUI extends JPanel{
         c.gridy=2;
         add(new JLabel("OnTrack:"), c);
         onTrack = new JCheckBox();
+        onTrack.setSelected(true); //Assume on track by default
         c.gridx = 1;
         c.gridy = 2;
         add(onTrack, c);
@@ -78,16 +85,11 @@ public class LoginGUI extends JPanel{
         
         //On button press, get the necessary info needed to make
         //the program tree, and switch the cardGUI to the program tree
-//        button.addActionListener((ActionEvent e) -> {
-//            String[] userData = sendUserInputs();
-//            JPanel programPanel = new ProgramTreeGUI(userData);
-//            content.add(programPanel, nextPanelName);
-//            cardLayout.show(content, nextPanelName);
-//        });
         button.addActionListener( new ActionListener() {
+                @Override
         	public void actionPerformed(ActionEvent e) {
         		String[] userData = sendUserInputs();
-        		JPanel programPanel = new ProgramTreeGUI(userData);
+        		JPanel programPanel = new ProgramTreeGUI(userData,content,cardLayout,nextPanelName);
         		content.add(programPanel, nextPanelName);
         		cardLayout.show(content, nextPanelName);	
         	}
@@ -98,6 +100,13 @@ public class LoginGUI extends JPanel{
         add(button, c);
     };
     
+    /*
+    * This function sends the student#, degree, years completed, and on track 
+    * status to the server. It build an array that contains these items
+    * as wells as the response text
+    * @return An array of strings the contains, student#,degree,years completed,
+    on track status, and the server response text
+    */
     private String[] sendUserInputs(){
         
         String serverAddress = "http://" +host + "/view1b.php?viewType=JAVA";
