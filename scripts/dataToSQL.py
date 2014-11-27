@@ -61,13 +61,14 @@ def parseDataFall():
             classType = lineSections[4].strip('"')
             outputRunning += "'" + classType + "',"
             outputRunning += "'fall',"
-            outputRunning += "'2014',"
+            outputRunning += "2014,"
             seatsLeft = lineSections[8].strip("\r\n")
+            seatsLeft = seatsLeft.strip("'")
             if len(list(seatsLeft)) == 0:
-                outputRunning += "'-1',"
+                outputRunning += "-1,"
             else:
                 
-                outputRunning += "'" + seatsLeft + "', "
+                outputRunning += seatsLeft + ", "
 
             outputRunning += "'" + parseClassDays(lineSections[5]) + "',"
             outputRunning += "'" + parseTime(lineSections[6]) + "',"
@@ -106,13 +107,14 @@ def parseDataWinter():
             classType = lineSections[4].strip('"')
             outputRunning += "'" + classType + "',"
             outputRunning += "'winter',"
-            outputRunning += "'2014',"
+            outputRunning += "2014,"
             seatsLeft = lineSections[8].strip("\r\n")
+            seatsLeft = seatsLeft.strip("'")
             if len(list(seatsLeft)) == 0:
-                outputRunning += "'-1',"
+                outputRunning += "-1,"
             else:
                 
-                outputRunning += "'" + seatsLeft + "', "
+                outputRunning += seatsLeft + ", "
 
             outputRunning += "'" + parseClassDays(lineSections[5]) + "',"
             outputRunning += "'" + parseTime(lineSections[6]) + "',"
