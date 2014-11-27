@@ -59,6 +59,8 @@ public class ProgramTreeGUI extends JPanel {
         String prevSemester = "winter";
         int col =-1; //int to hold the column count
         int row =2; //Start at row 2 to leave room for column titles
+        int yearsCompleted = Integer.parseInt(programData[2]);
+        boolean ontrack = Boolean.parseBoolean(programData[3]);
         for (String csvRow : _csvRows) {
 
             String[] course = csvRow.split(",");
@@ -88,6 +90,10 @@ public class ProgramTreeGUI extends JPanel {
             add(courseName, c);
             c.gridy=row+1;
             JCheckBox checkbox = new JCheckBox();
+            if((courseYear <= yearsCompleted) && ontrack) {
+            	checkbox.setEnabled(false);
+            	checkbox.setSelected(true);
+            }
             checkbox.setBorder(border);
             checkbox.setBorderPainted(true);
             add(checkbox, c);
