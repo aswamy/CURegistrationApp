@@ -33,56 +33,68 @@ public class LoginGUI extends JPanel{
     */
     public LoginGUI(String[] degrees, final JPanel content,final CardLayout cardLayout, final String nextPanelName) {
 
+        this.setBackground(Color.lightGray);
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipadx = 200;
+        GridBagConstraints labelc = new GridBagConstraints();
+        GridBagConstraints itemc  = new GridBagConstraints();
+        GridBagConstraints fillerc  = new GridBagConstraints();
+        //This is used to add blank space to fill the screen
+        fillerc.fill = GridBagConstraints.HORIZONTAL;
+        fillerc.anchor = GridBagConstraints.NORTHWEST;
+        fillerc.weightx = 1.0;
+        fillerc.gridwidth = GridBagConstraints.REMAINDER;
         
-        /* first row*/
-        c.gridx=0;
-        c.gridy=0;
-        add(new JLabel("Student #:"), c);
-        studentNum = new JTextField();
-        c.gridx = 1;
-        c.gridy = 0;
-        add(studentNum, c);   
+        //This is used by items to give them a width of 2
+        itemc.fill = GridBagConstraints.HORIZONTAL;
+        itemc.anchor = GridBagConstraints.NORTHWEST;
+        itemc.weightx = 1.0;
+        itemc.gridwidth = 2;
+        itemc.ipadx = 50;
+        itemc.ipady = 10;
         
-        /* second row*/
-        c.gridx=0;
-        c.gridy=1;
-        add(new JLabel("Degree:"), c);
-        //String[] degrees = {"CE", "CSE", "SE", "EE"}; //TODO get from server.
+        /*This is used by labels and takes up the smallest amount of space
+        *possible
+        */
+        labelc.fill = GridBagConstraints.HORIZONTAL;
+        labelc.anchor = GridBagConstraints.NORTHWEST;
+        labelc.weightx = 0.0;
+        labelc.gridwidth = 1;
+        labelc.ipadx = 50;
+        labelc.ipady = 10;
+        
+        //Create a banner
+        JLabel banner = new JLabel("Carleton University Registration App",SwingConstants.CENTER);
+        banner.setOpaque(true);
+        banner.setForeground(Color.white);
+        banner.setBackground(Color.black);
+        banner.setFont(new Font(banner.getName(), Font.ITALIC, 32));
+        add(banner,fillerc);
+        //add(new JLabel(), fillerc);
+        
+        //Create the input forms
+        add(new JLabel("Student #:"), labelc);
+        studentNum = new JTextField("10080000");
+        add(studentNum, itemc);
+        add(new JLabel(), fillerc);
+        
+        add(new JLabel("Degree:"), labelc);
         selectDegree = new JComboBox(degrees);
-        c.gridx = 1;
-        c.gridy = 1;
-        add(selectDegree, c);
+        add(selectDegree, itemc);
+        add(new JLabel(), fillerc);
         
-        /*third row*/
-        c.gridx=0;
-        c.gridy=2;
-        add(new JLabel("OnTrack:"), c);
+        add(new JLabel("OnTrack:"), labelc);
         onTrack = new JCheckBox();
         onTrack.setSelected(true); //Assume on track by default
-        c.gridx = 1;
-        c.gridy = 2;
-        add(onTrack, c);
+        add(onTrack, itemc);
+        add(new JLabel(), fillerc);
         
-        /*fourth row*/
-        c.gridx=0;
-        c.gridy=3;
-        add(new JLabel("Year Completed:"), c);
+        add(new JLabel("Year Completed:"), labelc);
         String[] years = {"0", "1", "2", "3"};
         selectYear = new JComboBox(years);
-        c.gridx = 1;
-        c.gridy = 3;
-        add(selectYear, c);
+        add(selectYear, itemc);
+        add(new JLabel(), fillerc);
         
-         /*4th row*/
-        c.gridx=0;
-        c.gridy=5;
-        c.gridwidth=2;
         JButton button =new JButton("Done");
-        
         //On button press, get the necessary info needed to make
         //the program tree, and switch the cardGUI to the program tree
         button.addActionListener( new ActionListener() {
@@ -96,8 +108,14 @@ public class LoginGUI extends JPanel{
         	
         	}
         );
-             
-        add(button, c);
+        add(new JLabel(), labelc);     
+        add(button, itemc);
+        /* Push all of the other components to the top of the screen
+        * by setting this last component to take up ALL of the vertical space
+        * that is unused.
+        */
+        fillerc.weighty =1; 
+        add(new JLabel(), fillerc);
     };
     
     /*
@@ -122,7 +140,6 @@ public class LoginGUI extends JPanel{
             "&degree="    +userData[1]+
             "&yearscompleted=" +userData[2]+
             "&ontrack="   +userData[3];
-         // GET method
         
         try{
             URL url = new URL(serverAddress + parameters);

@@ -31,6 +31,7 @@ public class ProgramTreeGUI extends JPanel {
         * and CSV list of program courses.
         */
        public ProgramTreeGUI(String[] programData, final JPanel content,final CardLayout cardLayout, final String nextPanelName) {
+        this.setBackground(Color.lightGray);
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         int tableLength = buildProgramTree(programData, c);
