@@ -142,9 +142,6 @@
 
 
 			$courseReached = FALSE;
-			global $courseHasLabArr;
-			$hasLab = $courseHasLabArr[$course];
-
 			
 			if($course != "" && sizeof($newArr) == 0) {
 				$picked = $coursesPicked;
@@ -187,7 +184,7 @@
 					$picked = $coursesPicked;
 					$left = $leftToTake;
 					array_push($picked,$courseName."-".$section);
-					if(!$lab && $hasLab) {
+					if(!$lab) {
 						//next course chosen should be the lab for the current course selected
 						$solutions = pickCourse($course, $leftToTake, $picked, substr($section, 0, 1), $solutions);
 						if(sizeof($solutions) > 9) {
