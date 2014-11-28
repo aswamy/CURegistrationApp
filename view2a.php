@@ -115,7 +115,7 @@
 		<div class="mainMessage">
 			* Select which courses to take this semester:
 		</div>
-		<form method="POST" action='view2.php'>
+		<form method="POST" action='view2b.php' onsubmit='return validateForm()'>
 
 			<div id="courseSelection">
 				<?php

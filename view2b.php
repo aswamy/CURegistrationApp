@@ -3,7 +3,7 @@
 
   require_once 'classes/TimeTable.php';
   require_once 'classes/Database.php';
-
+  include 'header.html';
 	
 	session_start();
 
@@ -71,8 +71,12 @@
 	echo "			</div>";
 	echo "</br>";
 	echo "			<div id='courseList'>";
-	echo "				<p>Courses in schedule: $solutionStr</p>
+	if(strlen($solutionStr) == 0) {
+		echo "				<p>No possible schedules for the given courses</p></div></br>";
+	} else {
+		echo "				<p>Courses in schedule: $solutionStr</p>
 					</div></br>";
+	}
 	echo "			<button type='button' onclick='myAjaxFunc(-1)'>previous</button>";
 	echo "			<button type='button' onclick='myAjaxFunc(1)'>next</button>";
 	echo " 			<input type='submit' value='Register'/>";
@@ -152,14 +156,14 @@
 				if($empty && !empty($picked)) {
 					//last course, so finish
 					$solutions = pickCourse("", array(), $picked, "", $solutions);
-					if(sizeof($solutions) > 9) {
+					if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}
 				} else if(!$empty){
 					//not last course, keep looking for solutions
 					$solutions = pickCourse($left[0], $left, $picked, "", $solutions);
-					if(sizeof($solutions) > 9) {
+					if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}
@@ -187,7 +191,7 @@
 					if(!$lab) {
 						//next course chosen should be the lab for the current course selected
 						$solutions = pickCourse($course, $leftToTake, $picked, substr($section, 0, 1), $solutions);
-						if(sizeof($solutions) > 9) {
+						if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}
@@ -207,7 +211,7 @@
 						if(empty($left)) {
 							//this was the last course, therefore see if the solution works
 							$solutions = pickCourse("", array(), $picked, "", $solutions);
-							if(sizeof($solutions) > 9) {
+							if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}
@@ -215,7 +219,7 @@
 						} else{
 							//try next course
 							$solutions = pickCourse($left[0], $left, $picked, "", $solutions); 
-							if(sizeof($solutions) > 9) {
+							if(sizeof($solutions) > 1) {
 								return $solutions;
 								//break;
 							}

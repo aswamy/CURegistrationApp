@@ -183,3 +183,16 @@ function updateCourse(course, checked) {
 		selectedCourses.splice(selectedCourses.indexOf(course), 1);
 	}
 }
+
+function validateForm() {
+	var div = document.getElementById('courseSelection');
+	var boxes = div.getElementsByTagName('input');
+	for(var i in boxes) {
+		input = boxes[i];
+		if(input.checked) {
+			return true;
+		}
+	}
+	alert("no courses selected");
+	return false;
+}
