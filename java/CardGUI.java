@@ -40,7 +40,7 @@ public class CardGUI extends JFrame {
     
         private String fetchDegreeList(){
         
-        String serverAddress = "http://" +host + "/view1a.php?viewType=JAVA";
+        String serverAddress = "http://" +host + "/CURegistrationApp/view1a.php?viewType=JAVA";
         String responseText;
          // GET method
         

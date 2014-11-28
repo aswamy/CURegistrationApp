@@ -127,7 +127,7 @@ public class LoginGUI extends JPanel{
     */
     private String[] sendUserInputs(){
         
-        String serverAddress = "http://" +host + "/view1b.php?viewType=JAVA";
+        String serverAddress = "http://" +host + "/CURegistrationApp/view1b.php?viewType=JAVA";
         String[] userData = new String[5]; //Store Degree, On Track, Year
         String responseText;
         userData[0] = studentNum.getText();
