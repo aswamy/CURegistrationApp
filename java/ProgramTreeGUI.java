@@ -69,7 +69,7 @@ public class ProgramTreeGUI extends JPanel {
         //course_name,course_year,course_semester,course_size;
         String[] colNames = csvRows[0].split(",");
         //These are the positions of each string in the colNames list
-        int course_name = Arrays.asList(colNames).indexOf("course_name");
+        final int course_name = Arrays.asList(colNames).indexOf("course_name");
         int course_year = Arrays.asList(colNames).indexOf("course_year");
         int course_semester = Arrays.asList(colNames).indexOf("course_semester");
         int course_size = Arrays.asList(colNames).indexOf("course_size");
@@ -82,10 +82,8 @@ public class ProgramTreeGUI extends JPanel {
         We assume that the server has sorted the csv such that
         it is sorted by year, and semester.
         (e.g 1 comes before 2, and fall comes before winter)
-
         This assumption makes the clients job easier because it
         does not need to find indeces and do the sorting itself.
-
         For each row the client just needs to figure out what column
         and row it should belong to. We just check if the semester is
         toggling between rows, and if so that means we must
@@ -99,7 +97,7 @@ public class ProgramTreeGUI extends JPanel {
         boolean ontrack = Boolean.parseBoolean(programData[3]);
         for (String csvRow : _csvRows) {
 
-            String[] course = csvRow.split(",");
+            final String[] course = csvRow.split(",");
             int courseYear = Integer.parseInt(course[course_year]);
             String courseSemester = course[course_semester];
 
@@ -156,4 +154,3 @@ public class ProgramTreeGUI extends JPanel {
        }
        
 }
-
