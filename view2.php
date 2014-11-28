@@ -15,33 +15,12 @@
 		}
 	}
 
-	$finishedCourseString = $_SESSION['finishedCourses'];
-	$finishedCourseList = explode(",",$finishedCourseString);
 	$degree = $_SESSION['degree'];
 	$term = $_SESSION['registering_semester'];
 	$year_status = $_SESSION['registering_year'];
 
 	//get database object
 	$db = new Database("sysc4504");
-
-	$courses_array = $db->getPrereqs($degree, $year_status, $term);
-	$course_prereq_json = "{";
-
-	$courseHasLabArr = array();
-	foreach($courses_array as $course) {
-		$courseName = $course['course_name'];
-		$courseHasLabArr[$courseName] = $course['course_has_lab'];
-		if (!strpos($courseName, "ELECT")) {
-			$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";
-		}
-	}
-
-	$course_prereq_json = rtrim($course_prereq_json, ',');
-	$course_prereq_json .= "}";
-
-
-	//get list of valid courses based on finished courses
-	$jsonArr = json_decode($course_prereq_json);
 	$formattedCoursesToTake = "(";
 	
 	foreach($coursesToTake as $course) {
@@ -119,23 +98,17 @@
 		$coursesArr = $courses_array;
 		//end conditions
 		if($course == "" && empty($leftToTake) && !empty($coursesPicked)) {
-			global $jsonArr; 
-			global $finishedCourseList;
-			$hasReq = hasAllPrereqs($coursesPicked, $jsonArr, $finishedCourseList);
 			
-			//check to make sure all picked courses meet there prerequisites
-			if($hasReq){ 
-				$timeTable = new TimeTable($coursesPicked);
-				$timeTable->generateTimeTable();
+			$timeTable = new TimeTable($coursesPicked);
+			$timeTable->generateTimeTable();
 
-				//make sure there isn't a conflict in the timetable, then add solution to list
-				if($timeTable->hasConflict() === FALSE) {
-					if(is_null($solutions)) {
-						$solutions = array();
-					}
-					array_push($solutions, $timeTable->courseList);
+			//make sure there isn't a conflict in the timetable, then add solution to list
+			if($timeTable->hasConflict() === FALSE) {
+				if(is_null($solutions)) {
+					$solutions = array();
 				}
-			} 
+				array_push($solutions, $timeTable->courseList);
+			}
 			return $solutions;
 		} else {
 			//build array of options for the current course/lab
@@ -182,9 +155,17 @@
 				if($empty && !empty($picked)) {
 					//last course, so finish
 					$solutions = pickCourse("", array(), $picked, "", $solutions);
+					if(sizeof($solutions) > 9) {
+								return $solutions;
+								//break;
+							}
 				} else if(!$empty){
 					//not last course, keep looking for solutions
 					$solutions = pickCourse($left[0], $left, $picked, "", $solutions);
+					if(sizeof($solutions) > 9) {
+								return $solutions;
+								//break;
+							}
 				}
 			}
 
@@ -209,7 +190,7 @@
 					if(!$lab && $hasLab) {
 						//next course chosen should be the lab for the current course selected
 						$solutions = pickCourse($course, $leftToTake, $picked, substr($section, 0, 1), $solutions);
-						if(sizeof($solutions) > 1) {
+						if(sizeof($solutions) > 9) {
 								return $solutions;
 								//break;
 							}
@@ -229,7 +210,7 @@
 						if(empty($left)) {
 							//this was the last course, therefore see if the solution works
 							$solutions = pickCourse("", array(), $picked, "", $solutions);
-							if(sizeof($solutions) > 1) {
+							if(sizeof($solutions) > 9) {
 								return $solutions;
 								//break;
 							}
@@ -237,7 +218,7 @@
 						} else{
 							//try next course
 							$solutions = pickCourse($left[0], $left, $picked, "", $solutions); 
-							if(sizeof($solutions) > 1) {
+							if(sizeof($solutions) > 9) {
 								return $solutions;
 								//break;
 							}
@@ -256,74 +237,5 @@
 		}
 
 	}
-	
-
-
- 
-
-
-
-	function hasAllPrereqs($courses, $jsonPrereqs, $finished) {
-		global $course_prereq_json;
-		$chosen = array();
-		foreach($courses as $aaa) {
-			$name = substr($aaa, 0,8);
-			if(!in_array($name, $chosen)){
-				array_push($chosen, $name);
-			}
-		}
-		foreach($jsonPrereqs as $obj => $val){
-			$coursesArray = $val->{"courses"};
-			//only check courses that are chosen
-			if(in_array($obj, $chosen)){
-				//if there is nothing, then there are no prereqs
-				if(!empty($coursesArray)){
-					$canTake = TRUE;
-					foreach ($coursesArray as $name) {
-						//if this var is an array, we OR every item in that array
-		  				if(is_array($name)){ 
-		  					$orPrereq = FALSE;
-		  					foreach($name as $trueName){
-		  						if(in_array($trueName->name, $finished) or $trueName->concurrent){
-		  							if(!$trueName->concurrent) {
-		  								$orPrereq = TRUE;
-		  								break;
-		  							}
-		  							else if(hasConcurrentCourse($trueName->name,$chosen)){
-		  								$orPrereq = TRUE;
-		  								break;
-		  							} else if(in_array($trueName->name, $finished)) {
-		  								$orPrereq = TRUE;
-		  								break;
-		  							}
-								}
-		  					}
-		  					if(!$orPrereq){
-		  						$canTake = FALSE;
-		  						break;
-		  					}
-						//if this var is not an array, we AND everything together
-		  				} else{
-		  					if (!in_array($name->name, $finished)) {
-		  						$canTake = FALSE;
-							}
-		  				}
-		  			}
-		  			//can't take course, so retun false
-		  			if(!$canTake){
-		  				return FALSE;
-		  			}
-				}
-			}
-		}
-		return TRUE; //we reached the end, meaning they weren't missing any prereqs
-	}
-
-	function hasConcurrentCourse($className, $classList) {
-		return in_array($className, $classList);
-	}
-
-	
-    
 
 ?>

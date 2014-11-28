@@ -32,11 +32,13 @@
 		
 		
 	$courseHasLabArr = array();
+	$coursesInYear = array();
 	foreach($courses_array as $course) {
 		$courseName = $course['course_name'];
 		$courseHasLabArr[$courseName] = $course['course_has_lab'];
 		if (!strpos($courseName, "ELECT")) {
 			$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";
+			array_push($coursesInYear, $course['course_name']);
 		}
 	}
 
@@ -68,7 +70,7 @@
 	  				if(is_array($name)){ 
 	  					$orPrereq = FALSE;
 	  					foreach($name as $trueName){
-	  						if(in_array($trueName->name, $finishedCourseList) or $trueName->concurrent == 'true'){
+	  						if(in_array($trueName->name, $finishedCourseList) or ($trueName->concurrent == 'true' and in_array($trueName->name, $coursesInYear))) {
 	  							$orPrereq = TRUE;
 	  							break;
 	  						}
@@ -100,10 +102,16 @@
 ?>
 
 	<head>
+		<script src="js/view2a.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/common.css" />
 	</head>
 	<body style="background-color: gray">
-	<?php include 'header.html';?>
+	<?php include 'header.html';
+		echo "<script>" . "setJsonPrereqs(" . $course_prereq_json . "); </script>";
+		echo "<script>" . "setFinishedCourses(" . json_encode($finishedCourseList) . "); </script>";
+
+
+	?>
 		<div class="mainMessage">
 			* Select which courses to take this semester:
 		</div>
@@ -113,11 +121,11 @@
 				<?php
 					echo "<div class='subMessage'>Courses you can take in <strong>year $_SESSION[registering_year], $_SESSION[registering_semester]</strong> based on completed courses:</div>";
 					foreach($validCourses as $course) {
-						echo "<input type='checkbox' name='$course' value=on/>$course</br>";
+						echo "<input id='$course' type='checkbox' name='$course' value=on onclick='onChangeCheckBox (this)'/>$course</br>";
 					}
 				?>
 				<br >
-				<input type="submit" value="Submit"/>
+				<input id="view2aSubmit" type="submit" value="Submit"/>
 			</div>
 
 		</form>

@@ -38,3 +38,4 @@ function myAjaxFunc(increment) {
 function updateScheduleText() {
 	document.getElementById("courseList").innerHTML = "<p>Courses in schedule: " + scheduleText + "</p>";
 }
+
