@@ -31,6 +31,10 @@
 		function getError(){
 			return mysqli_error($this->connection);
 		}
+		
+		function getConnError(){
+			return mysqli_connect_error();
+		}
 
 		function getPrereqs($degree, $course_year, $term) {
 			$sql = "SELECT p.*, o.course_prerequisite, o.course_has_lab FROM cu_program_progression p LEFT JOIN cu_offered_courses o ON p.course_name = o.course_name WHERE p.degree_name='$degree' AND p.course_year = $course_year AND p.course_semester = '$term' ORDER BY p.course_name DESC";
