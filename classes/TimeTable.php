@@ -1,6 +1,7 @@
 <?php
 
 	require_once('TimeSlot.php');
+	require_once('Database.php');
 	
 	class TimeTable {
 
@@ -117,15 +118,9 @@
 		    	
 		    	$sect = substr($entry,9);
 		    	
+		    	$db = new Database("sysc4504");
 
-		    	$conn = new mysqli('localhost', 'root', '', 'sysc4504');
-				if ($conn->connect_error) {
-					trigger_error('Connection to database has failed');
-				}
-
-				$courses_query = "SELECT * FROM cu_running_courses WHERE course_name ='$course' AND course_section = '$sect';";
-				$courses_query_rs = $conn->query($courses_query);
-				$courses_array = $courses_query_rs->fetch_all(MYSQLI_ASSOC);
+				$courses_array = $db->getCourseSection($course,$sect);
 				//echo $courses_query;
 
 				foreach($courses_array as $course) {

@@ -41,6 +41,11 @@
 			return $this->execute($sql);
 		}
 
+		function getCourseSection($course, $sect) {
+			$sql = "SELECT * FROM cu_running_courses WHERE course_name ='$course' AND course_section = '$sect';";
+			return $this->execute($sql);
+		}
+
 		function getDegreeCourses($degree) {
 			$sql = "SELECT * FROM cu_program_progression WHERE degree_name='$degree' ORDER BY course_year, course_semester";
 			return $this->execute($sql);
