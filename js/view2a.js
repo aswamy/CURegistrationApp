@@ -193,6 +193,14 @@ function validateForm() {
 			return true;
 		}
 	}
-	alert("no courses selected");
+
+	var selections = div.getElementsByTagName('select');
+	for (var j in selections) {
+	 	if (selections[j].value != "---" && selections[j].value !== undefined) {
+	 		return true;
+		}
+	}
+
+	alert("No courses Selected");
 	return false;
 }

@@ -1,9 +1,10 @@
 <?php
+	require_once 'classes/TimeTable.php';
+	require_once 'classes/Database.php';
 
-
-  require_once 'classes/TimeTable.php';
-  require_once 'classes/Database.php';
-  include 'header.html';
+	echo "<html>";
+	echo "<head><link rel='stylesheet' type='text/css' href='css/common.css' /></head><body>";
+	include 'header.html';
 	
 	session_start();
 
@@ -12,6 +13,8 @@
 	foreach($_POST as $key => $val) {
 		if(preg_match("/[A-Z]{4}[0-9]{4}/", "$key", $matches)) {
   			array_push($coursesToTake, $key);
+		} else if (strpos($key, "_ELECT") !== FALSE and $val != '---') {
+			array_push($coursesToTake, $val);	
 		}
 	}
 
@@ -45,11 +48,25 @@
 		}
 	}
 
-	$selectedIndex = 0;
 
+	/*
+	* See how many courses you can actually take (in case user selects electives that is not offered in the semester registering)
+	*/
+	$course_taking = array();
+	foreach($courses_array as $c) {
+		$name = $c['course_name'];
+		if(!in_array($name, $course_taking)) {
+			array_push($course_taking, $name);
+		}
+	}
 	echo '<script src="js/page3.js"></script>';
-	echo "<html>";
-	echo "	<body>";
+	echo "		<br>";
+	// A message for every course not offered this semester
+	foreach($coursesToTake as $c) {
+	 	if (!in_array($c, $course_taking)) {
+	 		echo "<div class='subMessage'>** Course $c not offered this semester or all sections full</div>";
+	 	}
+	}
 	echo "		<form method='POST' action='page4.php' style='overflow:auto;' >";
 	echo "			<div id='global' style='overflow:auto;'>";
 	echo "				<div id='timeTable' style='display:block;'>";
@@ -64,7 +81,7 @@
 			$solutionStr = $solutionStr . $course . ",";
 		}
 		$solutionStr = rtrim($solutionStr, ",");
-		echo "					<div style='display:none;'>" .  $solutionStr . "</div>";
+		echo "				<div style='display:none;'>" .  $solutionStr . "</div>";
 		
 	}
 	echo "				</div>";

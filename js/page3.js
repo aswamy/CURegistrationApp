@@ -18,6 +18,8 @@ function myAjaxFunc(increment) {
 	} else if(index < 0) {
 		index = length-1;
 	}
+
+	if(length <= 0) return;
 	var b = solutions[index].innerHTML.split(',');
 	//b.pop();//temporary
 	scheduleText = "";

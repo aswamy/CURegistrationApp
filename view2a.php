@@ -5,7 +5,7 @@
 	$finishedCourseList = array();
 	$validCourses = array();
 	foreach($_POST as $key => $val) {
-		if(preg_match("/[A-Z]{4}[0-9]{4}/", "$key", $matches)) {
+		if(preg_match("/[A-Z]{4}[0-9]{4}/", "$key", $matches) OR strpos($key, "_ELECT") !== FALSE) {
   			array_push($finishedCourseList, $key);
 		}
 	}
@@ -26,19 +26,24 @@
 	$db = new Database("sysc4504");
 
 	$courses_array = $db->getPrereqs($degree, $year_status, $term);
+	$electives_map = $db->getDegreeElectives($degree);
 	$course_prereq_json = "{";
-
-	
 		
 		
 	$courseHasLabArr = array();
 	$coursesInYear = array();
+	$electivesInYear = array();
+
 	foreach($courses_array as $course) {
 		$courseName = $course['course_name'];
 		$courseHasLabArr[$courseName] = $course['course_has_lab'];
-		if (!strpos($courseName, "ELECT")) {
+		if (strpos($courseName, "ELECT") === FALSE) {
 			$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";
 			array_push($coursesInYear, $course['course_name']);
+		} else {
+			if (!in_array($courseName, $finishedCourseList)) {
+				array_push($electivesInYear, $courseName);
+			}
 		}
 	}
 
@@ -122,6 +127,17 @@
 					echo "<div class='subMessage'>Courses you can take in <strong>year $_SESSION[registering_year], $_SESSION[registering_semester]</strong> based on completed courses:</div>";
 					foreach($validCourses as $course) {
 						echo "<input id='$course' type='checkbox' name='$course' value=on onclick='onChangeCheckBox (this)'/>$course</br>";
+					}
+					echo "<br>";
+					foreach($electivesInYear as $elective) {
+						echo "<div style='padding-bottom:5px'>$elective : <select class='inputField' name='$elective'>";
+						echo "<option value='---'>---</option>";
+						foreach($electives_map as $elect) {
+							if (strpos($elective, $elect['elective_type']) !== FALSE) {
+								echo "<option value='$elect[course_name]'>$elect[course_name]</option>";
+							}
+						}
+						echo '</select></div>';
 					}
 				?>
 				<br >

@@ -42,6 +42,11 @@
 			return $this->execute($sql);
 		}
 
+		function getDegreeElectives($degree) {
+			$sql = "SELECT * FROM cu_offered_electives WHERE degree_name='$degree'";
+			return $this->execute($sql);
+		}
+
 		function getNameInCourses($degree, $course_year, $inCourses, $term) {
 			$sql = "SELECT course_name FROM cu_program_progression WHERE degree_name = '$degree' AND course_year = $course_year AND course_name IN $inCourses AND course_semester = '$term' ORDER BY course_name DESC";
 			return $this->execute($sql);

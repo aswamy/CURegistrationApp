@@ -2,7 +2,7 @@
 	<link rel="stylesheet" type="text/css" href="css/PrerequisiteTree.css" />
 	<link rel="stylesheet" type="text/css" href="css/common.css" />
 </head>
-<body style="background-color: gray">
+<body>
 	<?php include 'header.html';?>
 	<div class="mainMessage">
 		* Select completed courses:

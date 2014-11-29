@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2014 at 07:22 AM
+-- Generation Time: Nov 28, 2014 at 11:26 PM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -39,16 +39,6 @@ CREATE TABLE IF NOT EXISTS `cu_program_progression` (
 --
 
 INSERT INTO `cu_program_progression` (`degree_name`, `course_year`, `course_semester`, `course_name`, `course_year_status_weight`) VALUES
-('SE', '1', 'fall', 'ECOR1010', 1),
-('SE', '1', 'fall', 'MATH1004', 1),
-('SE', '1', 'fall', 'MATH1104', 1),
-('SE', '1', 'fall', 'PHYS1003', 1),
-('SE', '1', 'fall', 'SYSC1005', 1),
-('SE', '1', 'winter', 'CHEM1101', 1),
-('SE', '1', 'winter', 'ECOR1101', 1),
-('SE', '1', 'winter', 'MATH1005', 1),
-('SE', '1', 'winter', 'PHYS1004', 1),
-('SE', '1', 'winter', 'SYSC2006', 1),
 ('CE', '1', 'fall', 'CHEM1101', 1),
 ('CE', '1', 'fall', 'C_ELECT_1', 0),
 ('CE', '1', 'fall', 'ECOR1010', 1),
@@ -85,12 +75,12 @@ INSERT INTO `cu_program_progression` (`degree_name`, `course_year`, `course_seme
 ('CE', '4', 'fall', 'SYSC4405', 1),
 ('CE', '4', 'fall', 'SYSC4504', 1),
 ('CE', '4', 'fall', 'SYSC4604', 1),
-('CE', '4', 'fall', 'SYSC4937', 1),
 ('CE', '4', 'winter', 'C_ELECT_3', 1),
 ('CE', '4', 'winter', 'ECOR4995', 1),
 ('CE', '4', 'winter', 'E_ELECT_C_2', 1),
 ('CE', '4', 'winter', 'SYSC4700', 1),
-('CE', '4', 'winter', 'SYSC4701', 1);
+('CE', '4', 'winter', 'SYSC4701', 1),
+('CE', '4', 'winter', 'SYSC4937', 1);
 
 --
 -- Indexes for dumped tables

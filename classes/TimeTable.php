@@ -189,7 +189,7 @@
 				</style>';
 			    //echo "<table>";
 			    $returnString = $returnString . '<input id="conflict" type="hidden" value="' . $this->conflict . '"/>';
-			    $returnString = $returnString . '<div id="times" class="dayColumn">time\day' . 
+			    $returnString = $returnString . '<div id="times" class="dayColumn">TIME\DAY' . 
 			    		'<div class="Column">8:35</div>
 							<div class="Column">9:05</div>
 							<div class="Column">9:35</div>
