@@ -8,10 +8,10 @@
 			$user="root";
 			$password="";
 			if($db!=""){
-				$this->connection = mysqli_connect($host, $user, $password, $db);
+				@$this->connection = mysqli_connect($host, $user, $password, $db);
 				}
 			else{
-				$this->connection = mysqli_connect($host, $user, $password);
+				@$this->connection = mysqli_connect($host, $user, $password);
 				}
 		}
 
@@ -30,6 +30,10 @@
 		
 		function getError(){
 			return mysqli_error($this->connection);
+		}
+		
+		function getConnError(){
+			return mysqli_connect_error();
 		}
 
 		function getPrereqs($degree, $course_year, $term) {
