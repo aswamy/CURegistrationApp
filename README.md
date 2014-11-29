@@ -1,3 +1,6 @@
+
+Place the CURegistrationApp  folder into the XAMPP htdocs folder, and run install.php to create the database.
+
 1 - Benjamin Weber  100819375	benweber@cmail.carleton.ca
 2 - Denis Dionne    100822373	denisdionne@cmail.carleton.ca
 3 - Alok Swamy	    100822701	alokswamy@cmail.carleton.ca
