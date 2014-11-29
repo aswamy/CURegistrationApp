@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2014 at 09:36 PM
+-- Generation Time: Nov 29, 2014 at 02:30 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -131,7 +131,13 @@ INSERT INTO `cu_offered_electives` (`degree_name`, `elective_type`, `course_name
 ('CE', 'S_ELECT', 'PHYS1003'),
 ('CE', 'S_ELECT', 'PHYS1901'),
 ('CE', 'S_ELECT', 'PHYS1902'),
-('CE', 'S_ELECT', 'PHYS2004');
+('CE', 'S_ELECT', 'PHYS2004'),
+('CE', 'C_ELECT', 'AFRI1001'),
+('CE', 'C_ELECT', 'AFRI1002'),
+('CE', 'C_ELECT', 'AFRI2001'),
+('CE', 'C_ELECT', 'BUSI2101'),
+('CE', 'C_ELECT', 'ENST1001'),
+('CE', 'C_ELECT', 'ENST1020');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
