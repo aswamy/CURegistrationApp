@@ -45,10 +45,11 @@ foreach($subject as $sub){
 			;";
 		
 	$db->update($sql);
-	if(mysqli_affected_rows($db->connection) ==1){
+	if(mysqli_affected_rows($db->connection) >0){
 		echo "You have successfully registered in $course $section <br/>";
 	} else {
-		echo "You couldn't register in $course $section <br/>";
+		echo "You couldn't register in $course $section because the course was full <br/>";
+		array_pop($lectures); //Remove the course from the lectures array so that we don't let you register in the lab
 	}
 }
 
