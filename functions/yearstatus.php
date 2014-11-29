@@ -29,18 +29,14 @@ function getYearStatus($courses_completed, $degree) {
 	$db = new Database("sysc4504");
 	$result = $db->getDegreeCourses($degree);
 
-	while ($row = $result->fetch_assoc()) {
+	foreach ($result as $row) {
 		if($row['course_year_status_weight'] == 1) {
 			if (in_array($row['course_name'], $courses_completed))
 				$creditsCompleted[$row['course_year']-1] += 0.5;
 			$totalCredits[$row['course_year']-1] += 0.5;
-		}		
-	}
+		}
 
-	echo "Year 1 credits: $creditsCompleted[0]/$totalCredits[0]<br>";
-	echo "Year 2 credits: $creditsCompleted[1]/$totalCredits[1]<br>";
-	echo "Year 3 credits: $creditsCompleted[2]/$totalCredits[2]<br>";
-	echo "Year 4 credits: $creditsCompleted[3]/$totalCredits[3]<br>";
+	}
 
 	$yearstatus = 1;
 	if(!isSecondYearStatus($creditsCompleted, $totalCredits)) return $yearstatus;

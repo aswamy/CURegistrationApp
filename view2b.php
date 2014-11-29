@@ -67,7 +67,7 @@
 	 		echo "<div class='subMessage'>** Course $c not offered this semester or all sections full</div>";
 	 	}
 	}
-	echo "		<form method='POST' action='page4.php' style='overflow:auto;' >";
+	echo "		<form method='POST' action='view3.php' style='overflow:auto;' >";
 	echo "			<div id='global' style='overflow:auto;'>";
 	echo "				<div id='timeTable' style='display:block;'>";
 	echo "				</div>";

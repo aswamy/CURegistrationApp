@@ -1,5 +1,6 @@
 <?php
 	require_once 'classes/Database.php';
+	require_once 'functions/yearstatus.php';
 
 	session_start();
 	$finishedCourseList = array();
@@ -17,26 +18,26 @@
 	$finishedCourseString = rtrim($finishedCourseString, ",");
 	$_SESSION['finishedCourses'] = $finishedCourseString;
 	$degree = $_SESSION['degree'];
-	$year_status = $_SESSION['registering_year'];
+	$year_reg = $_SESSION['registering_year'];
 	$term = $_SESSION['registering_semester'];
+	$yr_status = getYearStatus($finishedCourseList, $degree);
+
 	$params = array();
-
-
-
 	$db = new Database("sysc4504");
 
-	$courses_array = $db->getPrereqs($degree, $year_status, $term);
+	$courses_array = $db->getPrereqs($degree, $year_reg, $term);
 	$electives_map = $db->getDegreeElectives($degree);
 	$course_prereq_json = "{";
 		
-		
 	$courseHasLabArr = array();
 	$coursesInYear = array();
+	$courseYearStatusArr = array();
 	$electivesInYear = array();
 
 	foreach($courses_array as $course) {
 		$courseName = $course['course_name'];
 		$courseHasLabArr[$courseName] = $course['course_has_lab'];
+		$courseYearStatusArr[$courseName] = $course['year_status_requirement'];
 		if (strpos($courseName, "ELECT") === FALSE) {
 			$course_prereq_json .= "\"$course[course_name]\" : $course[course_prerequisite],";
 			array_push($coursesInYear, $course['course_name']);
@@ -61,7 +62,7 @@
 		$coursesArray = $val->{"courses"};
 		if(!in_array($obj, $finishedCourseList)){
 
-
+			if ($courseYearStatusArr[$obj] <= $yr_status) {
 			//if there is nothing, then there are no prereqs
 			if(empty($coursesArray)){
   				array_push($validCourses, $obj);
@@ -100,6 +101,7 @@
 	  				}
 	  			}
 			}
+		}
 		}
 		
 
