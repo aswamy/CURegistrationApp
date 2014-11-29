@@ -59,7 +59,7 @@
 			array_push($course_taking, $name);
 		}
 	}
-	echo '<script src="js/page3.js"></script>';
+	echo '<script src="js/view2b.js"></script>';
 	echo "		<br>";
 	// A message for every course not offered this semester
 	foreach($coursesToTake as $c) {
